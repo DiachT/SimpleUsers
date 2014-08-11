@@ -21,4 +21,8 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.github.provigen:ProviGen-lib:2.0.+'
+    compile 'com.squareup.picasso:picasso:2.3.+'
+    compile 'com.google.code.gson:gson:2.2.4'
+    compile 'com.google.android.gms:play-services:4.2.42'
 }

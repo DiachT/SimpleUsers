@@ -1,4 +1,4 @@
-package com.diacht.simpleusers;
+package com.diacht.simpleusers.ui.activity;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -8,6 +8,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.diacht.simpleusers.R;
 
 
 public class MainActivity extends Activity {
