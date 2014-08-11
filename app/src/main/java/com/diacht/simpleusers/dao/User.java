@@ -21,6 +21,8 @@ public class User implements Serializable {
     public static final String FIELD_AVATAR = "avatar";
     public static final String FIELD_LONGITUDE = "longitude";
     public static final String FIELD_LATITUDE = "latitude";
+    public static final String FIELD_WWW = "www";
+    public static final String FIELD_PHONE = "phone";
 
     @SerializedName(FIELD_ID)
     private int mId;
@@ -34,16 +36,22 @@ public class User implements Serializable {
     private double mLongitude;
     @SerializedName(FIELD_LATITUDE)
     private double mLatitude;
+    @SerializedName(FIELD_WWW)
+    private String mWww;
+    @SerializedName(FIELD_PHONE)
+    private String mPhone;
 
 
     public User(int id, String name, String email, String avatar, double longitude,
-                double latitude) {
+                double latitude, String www, String phone) {
         setId(id);
         setName(name);
         setEmail(email);
         setAvatar(avatar);
         setLatitude(latitude);
         setLongitude(longitude);
+        setWww(www);
+        setPhone(phone);
     }
 
     public User() {}
@@ -56,6 +64,8 @@ public class User implements Serializable {
         result.put(UsersContract.avatar, mAvatar);
         result.put(UsersContract.latitude, mLatitude);
         result.put(UsersContract.longitude, mLongitude);
+        result.put(UsersContract.phone, mPhone);
+        result.put(UsersContract.www, mWww);
         return result;
     }
 
@@ -105,5 +115,21 @@ public class User implements Serializable {
 
     public void setLatitude(double mLatitude) {
         this.mLatitude = mLatitude;
+    }
+
+    public String getWww() {
+        return mWww;
+    }
+
+    public void setWww(String mWww) {
+        this.mWww = mWww;
+    }
+
+    public String getPhone() {
+        return mPhone;
+    }
+
+    public void setPhone(String mPhone) {
+        this.mPhone = mPhone;
     }
 }

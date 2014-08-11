@@ -25,6 +25,11 @@ public interface UsersContract extends ProviGenBaseContract {
     public static final String latitude = User.FIELD_LATITUDE;
     @Column(Type.TEXT)
     public static final String avatar = User.FIELD_AVATAR;
+    @Column(Type.TEXT)
+    public static final String www = User.FIELD_WWW;
+    @Column(Type.TEXT)
+    public static final String phone = User.FIELD_PHONE;
+
 
     @ContentUri
     public static final Uri CONTENT_URI = Uri.parse("content://com.diacht.simpleusers/users");
