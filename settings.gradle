@@ -1,1 +1,3 @@
-include ':app'
+include ':app', ':vksdk_library', ':VKTestApplication'
+project(':vksdk_library').projectDir = new File('vk-android-sdk/vksdk_library')
+project(':VKTestApplication').projectDir = new File('vk-android-sdk/VKTestApplication')

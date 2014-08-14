@@ -1,8 +1,8 @@
 package com.diacht.simpleusers.ui.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.widget.TextView;
 
 import com.diacht.simpleusers.R;
@@ -11,8 +11,8 @@ import com.diacht.simpleusers.R;
  * Splash screen activity.
  * @author Tetiana Diachuk (diacht@gmail.com)
  */
-public class SplashActivity extends ActionBarActivity {
-    private static final long TIMEOUT_DELAY = 2000;
+public class SplashActivity extends Activity {
+    private static final long TIMEOUT_DELAY = 2500;
     private TextView mText;
 
     @Override
@@ -21,14 +21,6 @@ public class SplashActivity extends ActionBarActivity {
         setContentView(R.layout.activity_splash);
         mText = (TextView) findViewById(R.id.splash_text);
         startMainActivity();
-    }
-
-    @Override
-    protected void onResume() {
-        if(getSupportActionBar()!=null){
-            getSupportActionBar().hide();
-        }
-        super.onResume();
     }
 
     private void startMainActivity() {

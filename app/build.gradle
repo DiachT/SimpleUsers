@@ -26,4 +26,6 @@ dependencies {
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.google.android.gms:play-services:4.2.42'
     compile 'com.android.support:appcompat-v7:20.+'
+    compile project(':vksdk_library')
+    compile 'org.twitter4j:twitter4j-core:4.0.1'
 }
