@@ -27,7 +27,7 @@ public class SplashActivity extends Activity {
         mText.postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                startActivity(new Intent(SplashActivity.this, LoginActivity.class));
                 finish();
             }
         }, TIMEOUT_DELAY);

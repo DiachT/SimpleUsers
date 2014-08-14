@@ -1,16 +1,18 @@
 package com.diacht.simpleusers.ui.activity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Window;
 import android.widget.Toast;
 
 import com.diacht.simpleusers.R;
+import com.diacht.simpleusers.ui.fragment.BaseFragment;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
@@ -29,12 +31,12 @@ import com.vk.sdk.api.model.VKWallPostResult;
  * Base activity.
  * @author Tetiana Diachuk (diacht@gmail.com)
  */
-public class BaseActivity extends ActionBarActivity {
+public class BaseActivity extends Activity{
 
     public static final int REQUEST_VK = VKSdk.VK_SDK_REQUEST_CODE;
 
     public String mSharingText;
-//    private BaseFragment mTargetFragment;
+    private BaseFragment mTargetFragment;
 
     public static final String[] sMyScope = new String[]{
             VKScope.WALL
@@ -42,13 +44,12 @@ public class BaseActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
     }
 
     public void startFragment(int resId, Fragment fragment,
                                  boolean addToStack, String stackTag, boolean animation) {
-        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        final FragmentTransaction ft = getFragmentManager().beginTransaction();
         if (animation)
             ft.setCustomAnimations(R.anim.slidein_right, R.anim.slideout_left,
                     R.anim.slidein_left, R.anim.slideout_right);
@@ -65,11 +66,10 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     public void startFragment(Fragment fragment, boolean backStack) {
-        startFragment(R.id.container, fragment, backStack, fragment.getClass().getSimpleName(), false);
+        startFragment(R.id.container, fragment, backStack, fragment.getClass().getSimpleName(), true);
     }
 
-    @Override //61992
-    //64206
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == REQUEST_VK) {
             VKUIHelper.onActivityResult(this, requestCode, resultCode, data);
@@ -160,8 +160,8 @@ public class BaseActivity extends ActionBarActivity {
     @Override
     public void onAttachFragment(Fragment fragment) {
         super.onAttachFragment(fragment);
-//        if (fragment instanceof BaseFragment) {
-//            mTargetFragment = (BaseFragment) fragment;
-//        }
+        if (fragment instanceof BaseFragment) {
+            mTargetFragment = (BaseFragment) fragment;
+        }
     }
 }

@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import com.diacht.simpleusers.R;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
