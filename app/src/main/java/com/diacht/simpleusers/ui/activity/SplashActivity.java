@@ -25,9 +25,9 @@ public class SplashActivity extends ActionBarActivity {
 
     @Override
     protected void onResume() {
-//        if(getSupportActionBar()!=null){
-//            getSupportActionBar().hide();
-//        }
+        if(getSupportActionBar()!=null){
+            getSupportActionBar().hide();
+        }
         super.onResume();
     }
 
