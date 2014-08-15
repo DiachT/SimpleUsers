@@ -19,10 +19,6 @@ import com.vk.sdk.VKUIHelper;
 public class BaseFragment extends Fragment {
     public ActionBar mActionBar;
 
-    public static Fragment newInstance() {
-        return new BaseFragment();
-    }
-
     protected void startFragment(Fragment fragment, boolean backStack) {
         ((BaseActivity)getActivity()).startFragment(fragment, backStack);
     }

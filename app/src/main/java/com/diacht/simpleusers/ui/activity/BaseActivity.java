@@ -48,7 +48,7 @@ public class BaseActivity extends Activity{
     }
 
     public void startFragment(int resId, Fragment fragment,
-                                 boolean addToStack, String stackTag, boolean animation) {
+                              boolean addToStack, String stackTag, boolean animation) {
         final FragmentTransaction ft = getFragmentManager().beginTransaction();
         if (animation)
             ft.setCustomAnimations(R.anim.slidein_right, R.anim.slideout_left,

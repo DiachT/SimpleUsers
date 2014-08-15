@@ -8,6 +8,14 @@
         android:id="@+id/log_login"
         style="@style/EditTextLogin"
         android:hint="@string/hint_login" />
+    <EditText
+        android:id="@+id/log_password"
+        style="@style/EditTextLogin"
+        android:hint="@string/hint_password" />
+    <EditText
+        android:id="@+id/log_password_confirm"
+        style="@style/EditTextLogin"
+        android:hint="@string/hint_password_confirm" />
 
     <Button
         android:layout_width="wrap_content"

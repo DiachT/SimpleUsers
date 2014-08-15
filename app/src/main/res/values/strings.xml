@@ -7,5 +7,7 @@
     <string name="google_maps_key">AIzaSyC6jSFuanFRdZX08TaJXDV3wYLFzmwJnw0</string>
     <string name="splash">Welcome!!</string>
     <string name="hint_login">login</string>
+    <string name="hint_password">password</string>
+    <string name="hint_password_confirm">password confirm</string>
 
 </resources>

@@ -1,5 +1,6 @@
 package com.diacht.simpleusers.ui.fragment;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,10 @@ import butterknife.OnClick;
 public class LoginFragment extends BaseFragment{
     @InjectView(R.id.log_login)
     protected EditText mLogin;
+
+    public static LoginFragment newInstance() {
+        return new LoginFragment();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
