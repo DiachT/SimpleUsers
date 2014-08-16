@@ -29,4 +29,5 @@ dependencies {
     compile project(':vksdk_library')
     compile 'org.twitter4j:twitter4j-core:4.0.1'
     compile 'com.jakewharton:butterknife:4.0.1'
+    compile 'ch.acra:acra:4.5.0'
 }

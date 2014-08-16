@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -32,6 +33,9 @@ import com.vk.sdk.api.model.VKWallPostResult;
  * @author Tetiana Diachuk (diacht@gmail.com)
  */
 public class BaseActivity extends Activity{
+    public interface OnSetDialogChoiceListener {
+        public void setDialogChoice();
+    }
 
     public static final int REQUEST_VK = VKSdk.VK_SDK_REQUEST_CODE;
 
@@ -67,6 +71,47 @@ public class BaseActivity extends Activity{
 
     public void startFragment(Fragment fragment, boolean backStack) {
         startFragment(R.id.container, fragment, backStack, fragment.getClass().getSimpleName(), true);
+    }
+
+    /**
+     * Выдает диалог об ошибках
+     */
+    public void ErrorDialog(int error) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getResources().getString(error))
+                .setCancelable(false)
+                .setPositiveButton(R.string.ok,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(final DialogInterface dialog,
+                                                final int id) {
+                            }
+                        });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    /**
+     * Выдает диалог о незаданных координатах
+     */
+    public void ErrorCoordinatesDialog(int error, final OnSetDialogChoiceListener listener) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getResources().getString(error))
+                .setCancelable(false)
+                .setPositiveButton(R.string.ok,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(final DialogInterface dialog,
+                                                final int id) {
+                                listener.setDialogChoice();
+                            }
+                        })
+                .setNegativeButton(R.string.cancel,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(final DialogInterface dialog,
+                                                final int id) {
+                            }
+                        });
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 
     @Override
