@@ -15,6 +15,9 @@
     <string name="ok">ok</string>
     <string name="hint_latitude">latitude</string>
     <string name="hint_logitude">logitude</string>
+    <string name="cancel">cancel</string>
+    <string name="hint_www">www</string>
+    <string name="hint_phone">phone</string>
 
     <!-- ACRA crash text -->
     <string name="crash_toast_text">К сожалению, во время выполнения данной задачи произошла критическая ошибка. Можете отослать разработчикам информацию об ошибке.</string>
@@ -26,6 +29,10 @@
     <string name="error_valid_password">Passwords are not equal</string>
     <string name="error_coordinates">Users map will not be available</string>
     <string name="error_login">Error login</string>
-    <string name="cancel">cancel</string>
+    <string name="error_login_pass">Incorrect login or password</string>
+    <string name="ok_registration">Registration complete</string>
+    <string name="ok_login">Login complete</string>
+    <string name="registration">registration</string>
+    <string name="login">login</string>
 
 </resources>

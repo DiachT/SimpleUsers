@@ -8,6 +8,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.diacht.simpleusers.system.SUApplication;
+import com.diacht.simpleusers.system.SUSettings;
 import com.diacht.simpleusers.ui.activity.BaseActivity;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.VKUIHelper;
@@ -18,6 +20,8 @@ import com.vk.sdk.VKUIHelper;
  */
 public class BaseFragment extends Fragment {
     public ActionBar mActionBar;
+    protected SUApplication mApplication;
+    protected SUSettings mSettings;
 
     protected void startFragment(Fragment fragment, boolean backStack) {
         ((BaseActivity)getActivity()).startFragment(fragment, backStack);
@@ -28,6 +32,12 @@ public class BaseFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mActionBar = getActivity().getActionBar();
         setHasOptionsMenu(true);
+        mApplication =  (SUApplication) getActivity().getApplication();
+        mSettings = mApplication.getSettings();
+    }
+
+    public void setTitle(int res){
+        mActionBar.setTitle(res);
     }
 
     protected void actionVk(){

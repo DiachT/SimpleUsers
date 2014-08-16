@@ -1,47 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="@dimen/padding">
-    <EditText
-        android:id="@+id/log_login"
-        style="@style/EditTextLogin"
-        android:hint="@string/hint_login" />
-    <EditText
-        android:id="@+id/log_password"
-        style="@style/EditTextLogin"
-        android:hint="@string/hint_password"
-        android:inputType="textPassword"/>
-    <EditText
-        android:id="@+id/log_password_confirm"
-        style="@style/EditTextLogin"
-        android:inputType="textPassword"
-        android:hint="@string/hint_password_confirm" />
-    <EditText
-        android:id="@+id/log_name"
-        style="@style/EditTextLogin"
-        android:inputType="textPersonName"
-        android:hint="@string/hint_name" />
-    <EditText
-        android:id="@+id/log_email"
-        style="@style/EditTextLogin"
-        android:hint="@string/hint_email"
-        android:inputType="textEmailAddress"/>
-    <EditText
-        android:id="@+id/log_latitude"
-        style="@style/EditTextLogin"
-        android:hint="@string/hint_latitude"
-        android:inputType="number"/>
-    <EditText
-        android:id="@+id/log_logitude"
-        style="@style/EditTextLogin"
-        android:hint="@string/hint_logitude"
-        android:inputType="number"/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/ok"
-        android:id="@+id/log_btn"
-        android:layout_gravity="center_horizontal" />
-</LinearLayout>
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/padding">
+        <EditText
+            android:id="@+id/log_login"
+            style="@style/EditTextLogin"
+            android:hint="@string/hint_login" />
+        <EditText
+            android:id="@+id/log_password"
+            style="@style/EditTextLogin"
+            android:hint="@string/hint_password"
+            android:inputType="textPassword"/>
+        <EditText
+            android:id="@+id/log_password_confirm"
+            style="@style/EditTextLogin"
+            android:inputType="textPassword"
+            android:hint="@string/hint_password_confirm" />
+        <EditText
+            android:id="@+id/log_name"
+            style="@style/EditTextLogin"
+            android:inputType="textPersonName"
+            android:hint="@string/hint_name" />
+        <EditText
+            android:id="@+id/log_email"
+            style="@style/EditTextLogin"
+            android:hint="@string/hint_email"
+            android:inputType="textEmailAddress"/>
+        <EditText
+            android:id="@+id/log_www"
+            style="@style/EditTextLogin"
+            android:hint="@string/hint_www"
+            android:inputType="textUri"/>
+        <EditText
+            android:id="@+id/log_phone"
+            style="@style/EditTextLogin"
+            android:hint="@string/hint_phone"
+            android:inputType="phone"/>
+        <EditText
+            android:id="@+id/log_latitude"
+            style="@style/EditTextLogin"
+            android:hint="@string/hint_latitude"
+            android:inputType="number"/>
+        <EditText
+            android:id="@+id/log_logitude"
+            style="@style/EditTextLogin"
+            android:hint="@string/hint_logitude"
+            android:inputType="number"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ok"
+            android:id="@+id/log_btn"
+            android:layout_gravity="center_horizontal" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="VK"
+                android:id="@+id/btn_vk"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TW"
+                android:id="@+id/btn_tw" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_registration" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

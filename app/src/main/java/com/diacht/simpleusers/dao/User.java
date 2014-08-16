@@ -14,6 +14,8 @@ import java.io.Serializable;
  */
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
+    public static final int NO_COORDINATES = 10000;
+    public static final int MY_ID = 0;
 
     public static final String FIELD_ID = "id";
     public static final String FIELD_NAME = "name";

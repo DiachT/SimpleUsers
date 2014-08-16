@@ -9,24 +9,49 @@ import android.preference.PreferenceManager;
  * @author Tetiana Diachuk (diacht@gmail.com)
  */
 public class SUSettings{
-    private final static String PREF_SELECT_CATEGORY = "select_category";
+    private final static String PREF_PASSWORD = "PREF_PASSWORD";
+    private final static String PREF_LOGIN = "PREF_LOGIN";
+    private final static String PREF_IS_LOGIN = "PREF_IS_LOGIN";
     private SharedPreferences mSettings;
+    private String mPassword;
+    private String mLogin;
+    private boolean mIsLogin;
 
     public SUSettings(Context context) {
         mSettings = PreferenceManager.getDefaultSharedPreferences(context);
         loadSettings();
     }
 
-     protected void loadSettings() {
-//        mSelectCategory = mSettings.getInt(PREF_SELECT_CATEGORY, 0);
+    protected void loadSettings() {
+        mPassword = mSettings.getString(PREF_PASSWORD, "");
+        mLogin = mSettings.getString(PREF_LOGIN, "");
+        mIsLogin = mSettings.getBoolean(PREF_IS_LOGIN, false);
     }
 
-//    public int getSelectCategory() {
-//        return mSelectCategory;
-//    }
-//
-//    public void setSelectCategory(int mSelectCategory) {
-//        this.mSelectCategory = mSelectCategory;
-//        mSettings.edit().putInt(PREF_SELECT_CATEGORY, mSelectCategory).commit();
-//    }
+    public String getPassword() {
+        return mPassword;
+    }
+
+    public void setPassword(String mPassword) {
+        this.mPassword = mPassword;
+        mSettings.edit().putString(PREF_PASSWORD, mPassword).commit();
+    }
+
+    public String getLogin() {
+        return mLogin;
+    }
+
+    public void setLogin(String mLogin) {
+        this.mLogin = mLogin;
+        mSettings.edit().putString(PREF_LOGIN, mLogin).commit();
+    }
+
+    public boolean getIsLogin() {
+        return mIsLogin;
+    }
+
+    public void setIsLogin(boolean mIsLogin) {
+        this.mIsLogin = mIsLogin;
+        mSettings.edit().putBoolean(PREF_IS_LOGIN, mIsLogin).commit();
+    }
 }
