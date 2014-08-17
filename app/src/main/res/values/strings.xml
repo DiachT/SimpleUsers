@@ -34,5 +34,6 @@
     <string name="ok_login">Login complete</string>
     <string name="registration">registration</string>
     <string name="login">login</string>
+    <string name="users">users</string>
 
 </resources>

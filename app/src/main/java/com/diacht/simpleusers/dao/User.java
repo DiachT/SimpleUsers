@@ -15,7 +15,6 @@ import java.io.Serializable;
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
     public static final int NO_COORDINATES = 10000;
-    public static final int MY_ID = 0;
 
     public static final String FIELD_ID = "id";
     public static final String FIELD_NAME = "name";
@@ -25,6 +24,8 @@ public class User implements Serializable {
     public static final String FIELD_LATITUDE = "latitude";
     public static final String FIELD_WWW = "www";
     public static final String FIELD_PHONE = "phone";
+    public static final String FIELD_PASSWORD = "password";
+    public static final String FIELD_LOGIN = "login";
 
     @SerializedName(FIELD_ID)
     private int mId;
@@ -42,11 +43,15 @@ public class User implements Serializable {
     private String mWww;
     @SerializedName(FIELD_PHONE)
     private String mPhone;
+    @SerializedName(FIELD_PASSWORD)
+    private String mPassword;
+    @SerializedName(FIELD_LOGIN)
+    private String mLogin;
 
 
-    public User(int id, String name, String email, String avatar, double longitude,
-                double latitude, String www, String phone) {
-        setId(id);
+
+    public User(String name, String email, String avatar, double longitude,
+                double latitude, String www, String phone, String password, String login) {
         setName(name);
         setEmail(email);
         setAvatar(avatar);
@@ -54,13 +59,14 @@ public class User implements Serializable {
         setLongitude(longitude);
         setWww(www);
         setPhone(phone);
+        setPassword(password);
+        setLogin(login);
     }
 
     public User() {}
 
     public ContentValues toContentValues() {
         ContentValues result = new ContentValues();
-        result.put(UsersContract.innerId, mId);
         result.put(UsersContract.name, mName);
         result.put(UsersContract.email, mEmail);
         result.put(UsersContract.avatar, mAvatar);
@@ -68,6 +74,8 @@ public class User implements Serializable {
         result.put(UsersContract.longitude, mLongitude);
         result.put(UsersContract.phone, mPhone);
         result.put(UsersContract.www, mWww);
+        result.put(UsersContract.password, mPassword);
+        result.put(UsersContract.login, mLogin);
         return result;
     }
 
@@ -133,5 +141,21 @@ public class User implements Serializable {
 
     public void setPhone(String mPhone) {
         this.mPhone = mPhone;
+    }
+
+    public String getPassword() {
+        return mPassword;
+    }
+
+    public void setPassword(String mPassword) {
+        this.mPassword = mPassword;
+    }
+
+    public String getLogin() {
+        return mLogin;
+    }
+
+    public void setLogin(String mLogin) {
+        this.mLogin = mLogin;
     }
 }

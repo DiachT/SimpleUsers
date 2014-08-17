@@ -1,6 +1,7 @@
 package com.diacht.simpleusers.ui.fragment;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 import com.diacht.simpleusers.R;
 import com.diacht.simpleusers.dao.User;
 import com.diacht.simpleusers.db.UsersContract;
+import com.diacht.simpleusers.system.SUSettings;
 import com.diacht.simpleusers.ui.activity.BaseActivity;
 import com.diacht.simpleusers.ui.activity.MainActivity;
 import com.diacht.simpleusers.utils.InputFormException;
@@ -57,7 +59,8 @@ public class LoginFragment extends BaseFragment implements BaseActivity.OnSetDia
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, null);
         ButterKnife.inject(this, view);
-        mIsLogin = mSettings.getIsLogin();
+        mIsLogin = getActivity().getContentResolver().query(UsersContract.CONTENT_URI, null,
+                null, null, null).moveToFirst();
         setIsLogin();
         return view;
     }
@@ -98,15 +101,15 @@ public class LoginFragment extends BaseFragment implements BaseActivity.OnSetDia
             InputFormException.assertBlankEditText(mLogin, R.string.error_login);
             InputFormException.assertBlankEditText(mPassword, R.string.error_pass);
             if (mIsLogin) {
-                InputFormException.assertTrue(mLogin.getText().toString().equals(
-                                mSettings.getLogin()),
-                        R.string.error_login_pass);
-                InputFormException.assertTrue(mPassword.getText().toString().equals(
-                                mSettings.getPassword()),
-                        R.string.error_login_pass);
-                Toast.makeText(getActivity(), R.string.ok_login, Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(getActivity(), MainActivity.class));
-                getActivity().finish();
+                Cursor cursor = getActivity().getContentResolver().query(UsersContract.CONTENT_URI, null,
+                        User.FIELD_LOGIN + "=? AND " + User.FIELD_PASSWORD + " =? ",
+                        new String[]{mLogin.getText().toString(), mPassword.getText().toString()},
+                        null);
+                if(cursor.moveToFirst()) {
+                    Toast.makeText(getActivity(), R.string.ok_login, Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getActivity(), MainActivity.class));
+                    getActivity().finish();
+                }
             } else {
                 InputFormException.assertBlankEditText(mName, R.string.error_name);
                 InputFormException.assertEmailValid(mEmail, R.string.error_email);
@@ -129,16 +132,15 @@ public class LoginFragment extends BaseFragment implements BaseActivity.OnSetDia
     }
 
     private void setNewData() {
-        User user = new User(User.MY_ID, mName.getText().toString(), mEmail.getText().toString(),"",
+        User user = new User(mName.getText().toString(), mEmail.getText().toString(),"",
                 mIsAddCoordinates ? Double.parseDouble(
                         mLogitude.getEditableText().toString()) : User.NO_COORDINATES,
                 mIsAddCoordinates ? Double.parseDouble(
                         mLatitude.getEditableText().toString()) : User.NO_COORDINATES,
-                mWww.getText().toString(), mPhone.getText().toString());
-        getActivity().getContentResolver().insert(UsersContract.CONTENT_URI, user.toContentValues());
-        mSettings.setPassword(mPassword.getText().toString());
-        mSettings.setLogin(mLogin.getText().toString());
-        mSettings.setIsLogin(true);
+                mWww.getText().toString(), mPhone.getText().toString(), mPassword.getText().toString(),
+                mLogin.getText().toString());
+        mSettings.setId(Integer.valueOf(getActivity().getContentResolver().
+                insert(UsersContract.CONTENT_URI, user.toContentValues()).getLastPathSegment()));
         Toast.makeText(getActivity(), R.string.ok_registration, Toast.LENGTH_SHORT).show();
         startActivity(new Intent(getActivity(), MainActivity.class));
         getActivity().finish();
