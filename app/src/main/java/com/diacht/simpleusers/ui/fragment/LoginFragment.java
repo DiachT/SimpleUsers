@@ -14,6 +14,7 @@ import com.diacht.simpleusers.R;
 import com.diacht.simpleusers.dao.User;
 import com.diacht.simpleusers.db.UsersContract;
 import com.diacht.simpleusers.system.SUSettings;
+import com.diacht.simpleusers.system.Utils;
 import com.diacht.simpleusers.ui.activity.BaseActivity;
 import com.diacht.simpleusers.ui.activity.MainActivity;
 import com.diacht.simpleusers.utils.InputFormException;
@@ -106,6 +107,7 @@ public class LoginFragment extends BaseFragment implements BaseActivity.OnSetDia
                         new String[]{mLogin.getText().toString(), mPassword.getText().toString()},
                         null);
                 if(cursor.moveToFirst()) {
+                    mSettings.setId(Utils.getIntFromCursor(cursor, UsersContract._ID));
                     Toast.makeText(getActivity(), R.string.ok_login, Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getActivity(), MainActivity.class));
                     getActivity().finish();

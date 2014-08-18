@@ -35,5 +35,7 @@
     <string name="registration">registration</string>
     <string name="login">login</string>
     <string name="users">users</string>
+    <string name="action_menu">map</string>
+    <string name="action_profile">profile</string>
 
 </resources>

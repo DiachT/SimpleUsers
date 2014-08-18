@@ -25,9 +25,7 @@ public class ContentProvider extends ProviGenProvider {
             @Override
             public void onCreate(SQLiteDatabase database) {
                 // Automatically creates table and needed columns.
-                new TableBuilder(UsersContract.class)
-                        .addConstraint(UsersContract.innerId, Constraint.UNIQUE,
-                                Constraint.OnConflict.REPLACE).createTable(database);
+                new TableBuilder(UsersContract.class).createTable(database);
             }
 
             @Override

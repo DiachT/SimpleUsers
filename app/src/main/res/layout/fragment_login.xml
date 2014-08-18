@@ -45,12 +45,12 @@
             android:id="@+id/log_latitude"
             style="@style/EditTextLogin"
             android:hint="@string/hint_latitude"
-            android:inputType="number"/>
+            android:inputType="numberDecimal"/>
         <EditText
             android:id="@+id/log_logitude"
             style="@style/EditTextLogin"
             android:hint="@string/hint_logitude"
-            android:inputType="number"/>
+            android:inputType="numberDecimal"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

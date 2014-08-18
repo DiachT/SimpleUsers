@@ -16,7 +16,6 @@ public class User implements Serializable {
     private static final long serialVersionUID = 1L;
     public static final int NO_COORDINATES = 10000;
 
-    public static final String FIELD_ID = "id";
     public static final String FIELD_NAME = "name";
     public static final String FIELD_EMAIL = "email";
     public static final String FIELD_AVATAR = "avatar";
@@ -27,8 +26,6 @@ public class User implements Serializable {
     public static final String FIELD_PASSWORD = "password";
     public static final String FIELD_LOGIN = "login";
 
-    @SerializedName(FIELD_ID)
-    private int mId;
     @SerializedName(FIELD_NAME)
     private String mName;
     @SerializedName(FIELD_EMAIL)
@@ -47,8 +44,6 @@ public class User implements Serializable {
     private String mPassword;
     @SerializedName(FIELD_LOGIN)
     private String mLogin;
-
-
 
     public User(String name, String email, String avatar, double longitude,
                 double latitude, String www, String phone, String password, String login) {
@@ -77,14 +72,6 @@ public class User implements Serializable {
         result.put(UsersContract.password, mPassword);
         result.put(UsersContract.login, mLogin);
         return result;
-    }
-
-    public int getId() {
-        return mId;
-    }
-
-    public void setId(int id) {
-        mId = id;
     }
 
     public String getName() {

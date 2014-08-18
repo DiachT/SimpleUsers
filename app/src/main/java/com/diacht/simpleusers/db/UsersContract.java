@@ -13,8 +13,6 @@ import com.tjeannin.provigen.annotation.ContentUri;
  * @author Tetiana Diachuk (diacht@gmail.com)
  */
 public interface UsersContract extends ProviGenBaseContract {
-    @Column(Type.INTEGER)
-    public static final String innerId = User.FIELD_ID;
     @Column(Type.TEXT)
     public static final String name = User.FIELD_NAME;
     @Column(Type.TEXT)
