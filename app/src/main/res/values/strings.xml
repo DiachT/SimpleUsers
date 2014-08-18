@@ -30,6 +30,7 @@
     <string name="error_coordinates">Users map will not be available</string>
     <string name="error_login">Error login</string>
     <string name="error_login_pass">Incorrect login or password</string>
+
     <string name="ok_registration">Registration complete</string>
     <string name="ok_login">Login complete</string>
     <string name="registration">registration</string>

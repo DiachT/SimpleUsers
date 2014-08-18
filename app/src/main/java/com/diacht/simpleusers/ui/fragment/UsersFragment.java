@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -82,13 +85,14 @@ public class UsersFragment extends BaseFragment implements AdapterView.OnItemCli
         lv.setOnItemClickListener(this);
         mAdapter = new UsersAdapter(getActivity());
         lv.setAdapter(mAdapter);
-        prepareCursor();
+//        prepareCursor();
         return lv;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        prepareCursor();
         setTitle(R.string.users);
     }
 
@@ -103,8 +107,32 @@ public class UsersFragment extends BaseFragment implements AdapterView.OnItemCli
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mCursor.close();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if ( item.getItemId() == R.id.action_map) {
+            startFragment(MapFragment.newInstance(), true);
+            return true;
+        } else
+        if ( item.getItemId() == R.id.action_profile) {
+//            startFragment(MapFragment.newInstance(), true);
+            return true;
+        }
+        return false;
+    }
+
+//    @Override
+//    public void onDestroyView() {
+//        setCursor(null);
+//        super.onDestroyView();
+//    }
+
+    @Override
+    public void onPause() {
+        setCursor(null);
+        super.onPause();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main, menu);
     }
 }

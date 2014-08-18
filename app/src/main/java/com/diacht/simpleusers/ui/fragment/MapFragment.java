@@ -14,7 +14,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
  * Map fragment.
  * @author Tetiana Diachuk (diacht@gmail.com)
  */
-public class MapFragment extends com.google.android.gms.maps.SupportMapFragment
+public class MapFragment extends com.google.android.gms.maps.MapFragment
         implements GoogleMap.OnMapLongClickListener, View.OnClickListener{
     public static final double FIELD_LATITUDE = 47.812004;
     public static final double FIELD_LONGITUDE = 35.107017;
