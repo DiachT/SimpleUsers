@@ -85,7 +85,6 @@ public class UsersFragment extends BaseFragment implements AdapterView.OnItemCli
         lv.setOnItemClickListener(this);
         mAdapter = new UsersAdapter(getActivity());
         lv.setAdapter(mAdapter);
-//        prepareCursor();
         return lv;
     }
 
@@ -118,12 +117,6 @@ public class UsersFragment extends BaseFragment implements AdapterView.OnItemCli
         }
         return false;
     }
-
-//    @Override
-//    public void onDestroyView() {
-//        setCursor(null);
-//        super.onDestroyView();
-//    }
 
     @Override
     public void onPause() {

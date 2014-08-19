@@ -18,4 +18,8 @@ public class Utils {
     public static long getLongFromCursor(Cursor cursor, String name) {
         return cursor.getLong(cursor.getColumnIndex(name));
     }
+
+    public static double getDoubleFromCursor(Cursor cursor, String name) {
+        return cursor.getDouble(cursor.getColumnIndex(name));
+    }
 }

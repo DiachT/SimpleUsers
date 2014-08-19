@@ -18,6 +18,11 @@
     <string name="cancel">cancel</string>
     <string name="hint_www">www</string>
     <string name="hint_phone">phone</string>
+    <string name="ok_registration">Registration complete</string>
+    <string name="ok_login">Login complete</string>
+    <string name="registration">registration</string>
+    <string name="login">login</string>
+    <string name="users">users</string>
 
     <!-- ACRA crash text -->
     <string name="crash_toast_text">К сожалению, во время выполнения данной задачи произошла критическая ошибка. Можете отослать разработчикам информацию об ошибке.</string>
@@ -31,12 +36,10 @@
     <string name="error_login">Error login</string>
     <string name="error_login_pass">Incorrect login or password</string>
 
-    <string name="ok_registration">Registration complete</string>
-    <string name="ok_login">Login complete</string>
-    <string name="registration">registration</string>
-    <string name="login">login</string>
-    <string name="users">users</string>
+    <!--menu-->
     <string name="action_menu">map</string>
     <string name="action_profile">profile</string>
+    <string name="users_map">map of users</string>
+    <string name="you_here">you here</string>
 
 </resources>

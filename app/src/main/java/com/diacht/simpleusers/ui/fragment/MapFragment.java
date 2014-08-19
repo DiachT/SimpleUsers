@@ -1,8 +1,16 @@
 package com.diacht.simpleusers.ui.fragment;
 
+import android.database.ContentObserver;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 
+import com.diacht.simpleusers.R;
+import com.diacht.simpleusers.dao.User;
+import com.diacht.simpleusers.db.UsersContract;
+import com.diacht.simpleusers.system.SUApplication;
+import com.diacht.simpleusers.system.Utils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -11,14 +19,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 /**
- * Map fragment.
+ * Map of users
  * @author Tetiana Diachuk (diacht@gmail.com)
  */
-public class MapFragment extends com.google.android.gms.maps.MapFragment
-        implements GoogleMap.OnMapLongClickListener, View.OnClickListener{
-    public static final double FIELD_LATITUDE = 47.812004;
-    public static final double FIELD_LONGITUDE = 35.107017;
-    public static final String FIELD_ADDRESS = "empire state building";
+public class MapFragment extends com.google.android.gms.maps.MapFragment{
+    private Cursor mCursor;
+    private ContentObserver mObserver;
 
     public static MapFragment newInstance() {
         final MapFragment fragment = new MapFragment();
@@ -26,11 +32,81 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mObserver = new ContentObserver(new Handler()) {
+            @SuppressWarnings("deprecation")
+            @Override
+            public void onChange(boolean selfChange) {
+                mCursor.requery();
+                updateContentFromCursor();
+                super.onChange(selfChange);
+            }
+        };
+    }
+
+    private void updateContentFromCursor() {
+        if (mCursor == null) {
+            return;
+        }
+        double myLatitude = User.NO_COORDINATES, myLongitude = User.NO_COORDINATES;
+        while(mCursor.moveToNext()){
+            if(Utils.getDoubleFromCursor(mCursor, User.FIELD_LATITUDE) != User.NO_COORDINATES &&
+                    Utils.getDoubleFromCursor(mCursor, User.FIELD_LONGITUDE) != User.NO_COORDINATES) {
+                if (Utils.getIntFromCursor(mCursor, UsersContract._ID) !=
+                        ((SUApplication) getActivity().getApplication()).getSettings().getId()) {
+                    addPoint(Utils.getDoubleFromCursor(mCursor, User.FIELD_LATITUDE),
+                            Utils.getDoubleFromCursor(mCursor, User.FIELD_LONGITUDE),
+                            Utils.getStringFromCursor(mCursor, User.FIELD_NAME),
+                            14.0f, R.drawable.map_balloon, false);
+                }else{
+                    myLatitude =  Utils.getDoubleFromCursor(mCursor, User.FIELD_LATITUDE);
+                    myLongitude = Utils.getDoubleFromCursor(mCursor, User.FIELD_LONGITUDE);
+                }
+            }
+        }
+        if(myLatitude != User.NO_COORDINATES && myLongitude != User.NO_COORDINATES){
+            addPoint(myLatitude, myLongitude, getString(R.string.you_here),
+                    14.0f, R.drawable.map_balloon_my, false);
+        }
+    }
+
+    private void prepareCursor() {
+        Cursor cursor = getActivity().getContentResolver().query(
+                UsersContract.CONTENT_URI, null, null, null, null);
+        setCursor(cursor);
+    }
+
+    private void setCursor(Cursor cursor) {
+        if (cursor == null) {
+            if (mCursor != null) {
+                mCursor.unregisterContentObserver(mObserver);
+                mCursor.close();
+                mCursor = null;
+            }
+        } else {
+            mCursor = cursor;
+            mCursor.registerContentObserver(mObserver);
+            updateContentFromCursor();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        prepareCursor();
+        getActivity().getActionBar().setTitle(R.string.users_map);
+    }
+
+    @Override
+    public void onPause() {
+        setCursor(null);
+        super.onPause();
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        setMyLocation();
-        addPoint(FIELD_LATITUDE, FIELD_LONGITUDE, "address", 14.0f, -1, false);
-        //getMap().setOnMapLongClickListener(this);
         getMap().setMapType(GoogleMap.MAP_TYPE_SATELLITE);
     }
 
@@ -88,13 +164,5 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment
                 getMap().moveCamera(CameraUpdateFactory.zoomTo(zoom));
             }
         }
-    }
-
-    @Override
-    public void onClick(View v) {
-    }
-
-    @Override
-    public void onMapLongClick(LatLng latLng) {
     }
 }

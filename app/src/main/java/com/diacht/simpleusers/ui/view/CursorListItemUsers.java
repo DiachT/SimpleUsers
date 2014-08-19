@@ -47,24 +47,30 @@ public class CursorListItemUsers extends LinearLayout {
         ButterKnife.inject(this);
     }
 
-    private void setDataToTextView(Cursor cursor, TextView view, String field) {
+    private void setDataToTextView(Cursor cursor, TextView view, String field, int text) {
         String str = Utils.getStringFromCursor(cursor, field);
         if (str.length() > 0) {
             view.setVisibility(View.VISIBLE);
-            view.setText(str);
+            view.setText(getContext().getText(text) + ": " + str);
         } else {
             view.setVisibility(View.GONE);
-        }
+    }
     }
 
     public void setData(Cursor cursor) {
-        setDataToTextView(cursor, mLogin, User.FIELD_LOGIN);
-        setDataToTextView(cursor, mLatitude, User.FIELD_LATITUDE);
-        setDataToTextView(cursor, mLongitude, User.FIELD_LONGITUDE);
-        setDataToTextView(cursor, mName, User.FIELD_NAME);
-        setDataToTextView(cursor, mEmail, User.FIELD_EMAIL);
-        setDataToTextView(cursor, mPhone, User.FIELD_PHONE);
-        setDataToTextView(cursor, mWww, User.FIELD_WWW);
+        setDataToTextView(cursor, mLogin, User.FIELD_LOGIN, R.string.hint_login);
+        if(Utils.getDoubleFromCursor(cursor, User.FIELD_LATITUDE) != User.NO_COORDINATES &&
+                Utils.getDoubleFromCursor(cursor, User.FIELD_LONGITUDE) != User.NO_COORDINATES) {
+            setDataToTextView(cursor, mLatitude, User.FIELD_LATITUDE, R.string.hint_latitude);
+            setDataToTextView(cursor, mLongitude, User.FIELD_LONGITUDE, R.string.hint_logitude);
+        }else{
+            mLatitude.setVisibility(View.GONE);
+            mLongitude.setVisibility(View.GONE);
+        }
+        setDataToTextView(cursor, mName, User.FIELD_NAME, R.string.hint_name);
+        setDataToTextView(cursor, mEmail, User.FIELD_EMAIL, R.string.hint_email);
+        setDataToTextView(cursor, mPhone, User.FIELD_PHONE, R.string.hint_phone);
+        setDataToTextView(cursor, mWww, User.FIELD_WWW, R.string.hint_www);
         mUserEmail = Utils.getStringFromCursor(cursor, User.FIELD_EMAIL);
         String imageUrl = Utils.getStringFromCursor(cursor, User.FIELD_AVATAR);
         if (imageUrl != null && !TextUtils.isEmpty(imageUrl)) {
