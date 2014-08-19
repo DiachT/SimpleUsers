@@ -12,6 +12,12 @@
         <item name="android:singleLine">true</item>
     </style>
 
+    <style name="TextViewProfile">
+        <item name="android:layout_marginTop">@dimen/activity_vertical_margin</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
     <style name="TextViewUser">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>

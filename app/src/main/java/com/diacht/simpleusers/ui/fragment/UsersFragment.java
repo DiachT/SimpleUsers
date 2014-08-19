@@ -15,11 +15,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.diacht.simpleusers.R;
 import com.diacht.simpleusers.adapter.UsersAdapter;
 import com.diacht.simpleusers.dao.User;
 import com.diacht.simpleusers.db.UsersContract;
+import com.diacht.simpleusers.system.Utils;
 import com.diacht.simpleusers.ui.view.CursorListItemUsers;
 
 /**
@@ -107,12 +109,22 @@ public class UsersFragment extends BaseFragment implements AdapterView.OnItemCli
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if ( item.getItemId() == R.id.action_map) {
-            startFragment(MapFragment.newInstance(), true);
+        if (item.getItemId() == R.id.action_map) {
+            Cursor cursor = getActivity().getContentResolver().query(
+                    UsersContract.CONTENT_URI, null, UsersContract._ID + "= ?",
+                    new String[]{String.valueOf(mSettings.getId())}, null);
+            cursor.moveToFirst();
+            if(Utils.getDoubleFromCursor(cursor, User.FIELD_LATITUDE) != User.NO_COORDINATES &&
+                    Utils.getDoubleFromCursor(cursor, User.FIELD_LONGITUDE) != User.NO_COORDINATES) {
+                startFragment(MapFragment.newInstance(), true);
+            }else{
+                Toast.makeText(getActivity(), R.string.error_coordinates, Toast.LENGTH_SHORT).show();
+            }
+            cursor.close();
             return true;
         } else
-        if ( item.getItemId() == R.id.action_profile) {
-//            startFragment(MapFragment.newInstance(), true);
+        if (item.getItemId() == R.id.action_profile) {
+            startFragment(ProfileFragment.newInstance(), true);
             return true;
         }
         return false;

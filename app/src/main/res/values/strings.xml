@@ -41,5 +41,7 @@
     <string name="action_profile">profile</string>
     <string name="users_map">map of users</string>
     <string name="you_here">you here</string>
+    <string name="coordinates">coordinates</string>
+    <string name="hint_password_new">new password</string>
 
 </resources>
