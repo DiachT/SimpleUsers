@@ -11,17 +11,17 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 /**
- * Map fragment.
+ * Map fragment set coordinates.
  * @author Tetiana Diachuk (diacht@gmail.com)
  */
-public class MapFragment extends com.google.android.gms.maps.MapFragment
+public class MapFragmentCoordinates extends com.google.android.gms.maps.MapFragment
         implements GoogleMap.OnMapLongClickListener, View.OnClickListener{
     public static final double FIELD_LATITUDE = 47.812004;
     public static final double FIELD_LONGITUDE = 35.107017;
     public static final String FIELD_ADDRESS = "empire state building";
 
-    public static MapFragment newInstance() {
-        final MapFragment fragment = new MapFragment();
+    public static MapFragmentCoordinates newInstance() {
+        final MapFragmentCoordinates fragment = new MapFragmentCoordinates();
         return fragment;
     }
 
