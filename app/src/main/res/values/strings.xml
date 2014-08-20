@@ -45,5 +45,10 @@
     <string name="hint_password_new">new password</string>
     <string name="error_pass_new">Error new password</string>
     <string name="ok_edit_profile">Profile edit</string>
+    <string name="foto_update">foto update</string>
+    <string name="action_logout">logout</string>
+    <string name="add_coordinates">Would you like to specify the coordinates?</string>
+    <string name="coordinates_update">coordinates_update</string>
+    <string name="error_latitude">error latitude</string>
 
 </resources>

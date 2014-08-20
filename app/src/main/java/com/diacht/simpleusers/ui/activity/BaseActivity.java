@@ -35,7 +35,7 @@ import com.vk.sdk.api.model.VKWallPostResult;
  */
 public class BaseActivity extends Activity{
     public interface OnSetDialogChoiceListener {
-        public void setDialogChoice();
+        public void setDialogChoice(boolean addCoordinates);
     }
 
     public static final int REQUEST_VK = VKSdk.VK_SDK_REQUEST_CODE;
@@ -94,15 +94,19 @@ public class BaseActivity extends Activity{
     /**
      * Выдает диалог о незаданных координатах
      */
-    public void ErrorCoordinatesDialog(int error, final OnSetDialogChoiceListener listener) {
+    public void ErrorCoordinatesDialog(int error, final OnSetDialogChoiceListener listener, final boolean addCoordinates) {
+        ErrorCoordinatesDialog(getResources().getString(error),listener, addCoordinates);
+    }
+
+    public void ErrorCoordinatesDialog(String error, final OnSetDialogChoiceListener listener, final boolean addCoordinates) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(getResources().getString(error))
+        builder.setMessage(error)
                 .setCancelable(false)
                 .setPositiveButton(R.string.ok,
                         new DialogInterface.OnClickListener() {
                             public void onClick(final DialogInterface dialog,
                                                 final int id) {
-                                listener.setDialogChoice();
+                                listener.setDialogChoice(addCoordinates);
                             }
                         })
                 .setNegativeButton(R.string.cancel,

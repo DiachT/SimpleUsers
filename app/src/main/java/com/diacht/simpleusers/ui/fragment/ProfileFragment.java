@@ -1,21 +1,24 @@
 package com.diacht.simpleusers.ui.fragment;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,8 +27,13 @@ import com.diacht.simpleusers.dao.User;
 import com.diacht.simpleusers.db.UsersContract;
 import com.diacht.simpleusers.system.Utils;
 import com.diacht.simpleusers.ui.activity.BaseActivity;
+import com.diacht.simpleusers.ui.activity.LoginActivity;
 import com.diacht.simpleusers.ui.activity.MainActivity;
 import com.diacht.simpleusers.utils.InputFormException;
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
+import java.util.Date;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -36,6 +44,7 @@ import butterknife.OnClick;
  * @author Tetiana Diachuk (diacht@gmail.com)
  */
 public class ProfileFragment extends BaseFragment implements BaseActivity.OnSetDialogChoiceListener {
+    private static final int TAKE_PICTURE = 1234;
     @InjectView(R.id.prof_login)
     protected TextView mLogin;
     @InjectView(R.id.prof_password)
@@ -54,10 +63,14 @@ public class ProfileFragment extends BaseFragment implements BaseActivity.OnSetD
     protected EditText mWww;
     @InjectView(R.id.prof_phone)
     protected EditText mPhone;
+    @InjectView(R.id.prof_foto)
+    protected ImageView mFoto;
     private Cursor mCursor;
     private ContentObserver mObserver;
     private boolean mIsAddCoordinates = false;
-    private String mAvatarURL;
+    private String mAvatar;
+    private String mLoginText;
+    private String mNewFotoPath;
 
     public static ProfileFragment newInstance() {
         return new ProfileFragment();
@@ -86,11 +99,12 @@ public class ProfileFragment extends BaseFragment implements BaseActivity.OnSetD
 
     private void setProfileData() {
         mName.setText(Utils.getStringFromCursor(mCursor, User.FIELD_NAME));
-        mLogin.setText(Utils.getStringFromCursor(mCursor, User.FIELD_LOGIN));
+        mLoginText = Utils.getStringFromCursor(mCursor, User.FIELD_LOGIN);
+        mLogin.setText(mLoginText);
         mEmail.setText(Utils.getStringFromCursor(mCursor, User.FIELD_EMAIL));
         mPhone.setText(Utils.getStringFromCursor(mCursor, User.FIELD_PHONE));
         mWww.setText(Utils.getStringFromCursor(mCursor, User.FIELD_WWW));
-        mAvatarURL = Utils.getStringFromCursor(mCursor, User.FIELD_AVATAR);
+        mAvatar = Utils.getStringFromCursor(mCursor, User.FIELD_AVATAR);
         if(Utils.getDoubleFromCursor(mCursor, User.FIELD_LATITUDE) != User.NO_COORDINATES &&
                 Utils.getDoubleFromCursor(mCursor, User.FIELD_LONGITUDE) != User.NO_COORDINATES) {
             mCoordinates.setText(Utils.getStringFromCursor(mCursor, User.FIELD_LATITUDE) + ", " +
@@ -98,6 +112,9 @@ public class ProfileFragment extends BaseFragment implements BaseActivity.OnSetD
             mIsAddCoordinates = true;
         }else{
             mIsAddCoordinates = false;
+        }
+        if (mAvatar != null && !TextUtils.isEmpty(mAvatar)) {
+            Picasso.with(getActivity()).load(mAvatar).placeholder(R.drawable.no_avatar).into(mFoto);
         }
     }
 
@@ -137,7 +154,22 @@ public class ProfileFragment extends BaseFragment implements BaseActivity.OnSetD
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.main, menu);
+        inflater.inflate(R.menu.profile, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_users) {
+            getFragmentManager().popBackStack();
+            return true;
+        } else
+        if (item.getItemId() == R.id.action_logout) {
+            startActivity(new Intent(getActivity(), LoginActivity.class));
+            Toast.makeText(getActivity(), R.string.action_logout, Toast.LENGTH_SHORT).show();
+            getActivity().finish();
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -150,34 +182,39 @@ public class ProfileFragment extends BaseFragment implements BaseActivity.OnSetD
 
     @OnClick(R.id.prof_foto)
     public void onFoto() {
-        Intent i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(i, 0);
+        File filesDir = getActivity().getExternalFilesDir("foto");
+        File foto = new File(filesDir, mLoginText + (new Date()).getTime() + ".jpg");
+        Uri fileUri = Uri.fromFile(foto);
+        mNewFotoPath = fileUri.toString();
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE );
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+        startActivityForResult(intent, TAKE_PICTURE);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode,
                                  Intent resultData) {
         super.onActivityResult(requestCode, resultCode, resultData);
-        if (resultData != null) {
-            String[] projection = {MediaStore.Images.Media.DATA};
-            Cursor cursor = getActivity().managedQuery(
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    projection, null, null, null);
-            int column_index_data = cursor
-                    .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToLast();
-            mAvatarURL = cursor.getString(column_index_data);
-//            Bitmap bitmapImage = BitmapFactory.decodeFile(imagePath);
-//            imageView.setImageBitmap(bitmapImage );
-            cursor.close();
+        if (requestCode == TAKE_PICTURE && resultCode == Activity.RESULT_OK) {
+            if (mAvatar != null && !TextUtils.isEmpty(mAvatar)) {
+                new File(mAvatar).delete();
+            }
+            ContentValues result = new ContentValues();
+            result.put(UsersContract.avatar, mNewFotoPath);
+            getActivity().getContentResolver().update(UsersContract.CONTENT_URI, result,
+                    UsersContract._ID + "= ?", new String[]{String.valueOf(mSettings.getId())});
+            Picasso.with(getActivity()).load(mNewFotoPath).skipMemoryCache()
+                    .placeholder(R.drawable.no_avatar).into(mFoto);
+            Toast.makeText(getActivity(), R.string.foto_update, Toast.LENGTH_SHORT).show();
         }
     }
 
     @OnClick(R.id.prof_coordinates)
     public void onMap() {
-        //TODO
-        if(true){
+        if(mIsAddCoordinates){
             startFragment(MapFragmentCoordinates.newInstance(), true);
+        }else{
+            ((BaseActivity) getActivity()).ErrorCoordinatesDialog(R.string.add_coordinates, this, true);
         }
     }
 
@@ -189,16 +226,12 @@ public class ProfileFragment extends BaseFragment implements BaseActivity.OnSetD
                     R.string.error_pass);
             InputFormException.assertBlankEditText(mName, R.string.error_name);
             InputFormException.assertEmailValid(mEmail, R.string.error_email);
-            InputFormException.assertBlankEditText(mPassword, R.string.error_pass_new);
             InputFormException.assertTrue(mPasswordNew.getText().toString().equals(
                             mPasswordConfirm.getText().toString()),
                     R.string.error_valid_password);
-            if(mIsAddCoordinates ||
-                    (Utils.getDoubleFromCursor(mCursor, User.FIELD_LATITUDE) != User.NO_COORDINATES &&
-                            Utils.getDoubleFromCursor(mCursor, User.FIELD_LONGITUDE) != User.NO_COORDINATES)){
-                ((BaseActivity) getActivity()).ErrorCoordinatesDialog(R.string.error_coordinates, this);
+            if(!mIsAddCoordinates){
+                ((BaseActivity) getActivity()).ErrorCoordinatesDialog(R.string.error_coordinates, this, false);
             } else {
-                mIsAddCoordinates = true;
                 setNewData();
             }
         }
@@ -211,12 +244,13 @@ public class ProfileFragment extends BaseFragment implements BaseActivity.OnSetD
         ContentValues result = new ContentValues();
         result.put(UsersContract.name, mName.getText().toString());
         result.put(UsersContract.email, mEmail.getText().toString());
-        result.put(UsersContract.avatar, mAvatarURL);
-//        result.put(UsersContract.latitude, mLatitude);
-//        result.put(UsersContract.longitude, mLongitude);
         result.put(UsersContract.phone, mPhone.getText().toString());
         result.put(UsersContract.www, mWww.getText().toString());
-        result.put(UsersContract.password, mPasswordNew.getText().toString());
+        if (TextUtils.isEmpty(mPasswordNew.getText().toString())) {
+            result.put(UsersContract.password, mPassword.getText().toString());
+        }else{
+            result.put(UsersContract.password, mPasswordNew.getText().toString());
+        }
         getActivity().getContentResolver().update(UsersContract.CONTENT_URI, result,
                 UsersContract._ID + "= ?", new String[]{String.valueOf(mSettings.getId())});
         Toast.makeText(getActivity(), R.string.ok_edit_profile, Toast.LENGTH_SHORT).show();
@@ -225,7 +259,11 @@ public class ProfileFragment extends BaseFragment implements BaseActivity.OnSetD
     }
 
     @Override
-    public void setDialogChoice() {
-        setNewData();
+    public void setDialogChoice(boolean addCoordinates) {
+        if (addCoordinates) {
+            startFragment(MapFragmentCoordinates.newInstance(), true);
+        } else {
+            setNewData();
+        }
     }
 }

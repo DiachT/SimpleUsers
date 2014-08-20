@@ -119,10 +119,15 @@ public class LoginFragment extends BaseFragment implements BaseActivity.OnSetDia
                 InputFormException.assertTrue(mPassword.getText().toString().equals(
                                 mPasswordConfirm.getText().toString()),
                         R.string.error_valid_password);
-                //TODO error Latitude,Logitude
+                InputFormException.assertTrue(Double.parseDouble(mLatitude.getText().toString()) < 85 &&
+                                Double.parseDouble(mLatitude.getText().toString()) > -85,
+                        R.string.error_latitude);
+                InputFormException.assertTrue(Double.parseDouble(mLogitude.getText().toString()) < 180 &&
+                                Double.parseDouble(mLogitude.getText().toString()) > -180,
+                        R.string.error_latitude);
                 if (mLatitude.getEditableText().toString().trim().length() == 0 ||
                         mLogitude.getEditableText().toString().trim().length() == 0) {
-                    ((BaseActivity) getActivity()).ErrorCoordinatesDialog(R.string.error_coordinates, this);
+                    ((BaseActivity) getActivity()).ErrorCoordinatesDialog(R.string.error_coordinates, this, false);
                 } else {
                     mIsAddCoordinates = true;
                     setNewData();
@@ -150,7 +155,7 @@ public class LoginFragment extends BaseFragment implements BaseActivity.OnSetDia
     }
 
     @Override
-    public void setDialogChoice() {
+    public void setDialogChoice(boolean data) {
         setNewData();
     }
 }

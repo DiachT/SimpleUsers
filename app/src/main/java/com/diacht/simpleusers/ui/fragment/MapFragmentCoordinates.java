@@ -1,32 +1,37 @@
 package com.diacht.simpleusers.ui.fragment;
 
+import android.content.ContentValues;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.Toast;
 
 import com.diacht.simpleusers.R;
 import com.diacht.simpleusers.dao.User;
 import com.diacht.simpleusers.db.UsersContract;
 import com.diacht.simpleusers.system.SUApplication;
 import com.diacht.simpleusers.system.Utils;
+import com.diacht.simpleusers.ui.activity.BaseActivity;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.squareup.picasso.Picasso;
 
 /**
  * Map fragment set coordinates.
  * @author Tetiana Diachuk (diacht@gmail.com)
  */
 public class MapFragmentCoordinates extends com.google.android.gms.maps.MapFragment
-        implements GoogleMap.OnMapLongClickListener{
+        implements GoogleMap.OnMapLongClickListener, BaseActivity.OnSetDialogChoiceListener {
     private ContentObserver mObserver;
     private Cursor mCursor;
     private int mId;
+    private LatLng mLatLngNew;
 
     public static MapFragmentCoordinates newInstance() {
         final MapFragmentCoordinates fragment = new MapFragmentCoordinates();
@@ -52,7 +57,8 @@ public class MapFragmentCoordinates extends com.google.android.gms.maps.MapFragm
         if (mCursor == null) {
             return;
         }
-        while(mCursor.moveToFirst()){
+        if(mCursor.moveToFirst()){
+            getMap().clear();
             if(Utils.getDoubleFromCursor(mCursor, User.FIELD_LATITUDE) != User.NO_COORDINATES &&
                     Utils.getDoubleFromCursor(mCursor, User.FIELD_LONGITUDE) != User.NO_COORDINATES) {
                 addPoint(Utils.getDoubleFromCursor(mCursor, User.FIELD_LATITUDE),
@@ -101,6 +107,7 @@ public class MapFragmentCoordinates extends com.google.android.gms.maps.MapFragm
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getMap().setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+        getMap().setOnMapLongClickListener(this);
     }
 
     /**
@@ -153,5 +160,21 @@ public class MapFragmentCoordinates extends com.google.android.gms.maps.MapFragm
 
     @Override
     public void onMapLongClick(LatLng latLng) {
+        mLatLngNew = latLng;
+        ((BaseActivity) getActivity()).ErrorCoordinatesDialog(getString(R.string.add_coordinates) + "    " +
+                latLng.latitude + ", " + latLng.longitude, this, true);
+    }
+
+    @Override
+    public void setDialogChoice(boolean addCoordinates) {
+        if (addCoordinates) {
+            ContentValues result = new ContentValues();
+            result.put(UsersContract.latitude, mLatLngNew.latitude);
+            result.put(UsersContract.longitude, mLatLngNew.longitude);
+            getActivity().getContentResolver().update(UsersContract.CONTENT_URI, result,
+                    UsersContract._ID + "= ?", new String[]{String.valueOf(mId)});
+            Toast.makeText(getActivity(), R.string.coordinates_update, Toast.LENGTH_SHORT).show();
+            getFragmentManager().popBackStack();
+        }
     }
 }
