@@ -58,7 +58,7 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment{
                     addPoint(Utils.getDoubleFromCursor(mCursor, User.FIELD_LATITUDE),
                             Utils.getDoubleFromCursor(mCursor, User.FIELD_LONGITUDE),
                             Utils.getStringFromCursor(mCursor, User.FIELD_NAME),
-                            14.0f, R.drawable.map_balloon, false);
+                            -1, R.drawable.map_balloon, false);
                 }else{
                     myLatitude =  Utils.getDoubleFromCursor(mCursor, User.FIELD_LATITUDE);
                     myLongitude = Utils.getDoubleFromCursor(mCursor, User.FIELD_LONGITUDE);
@@ -67,7 +67,7 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment{
         }
         if(myLatitude != User.NO_COORDINATES && myLongitude != User.NO_COORDINATES){
             addPoint(myLatitude, myLongitude, getString(R.string.you_here),
-                    14.0f, R.drawable.map_balloon_my, false);
+                    -1, R.drawable.map_balloon_my, false);
         }
     }
 

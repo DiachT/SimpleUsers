@@ -64,7 +64,7 @@ public class MapFragmentCoordinates extends com.google.android.gms.maps.MapFragm
                 addPoint(Utils.getDoubleFromCursor(mCursor, User.FIELD_LATITUDE),
                         Utils.getDoubleFromCursor(mCursor, User.FIELD_LONGITUDE),
                         getString(R.string.you_here),
-                        14.0f, R.drawable.map_balloon_my, false);
+                        -1, R.drawable.map_balloon_my, false);
             }
         }
     }

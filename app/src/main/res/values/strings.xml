@@ -50,5 +50,7 @@
     <string name="add_coordinates">Would you like to specify the coordinates?</string>
     <string name="coordinates_update">coordinates_update</string>
     <string name="error_latitude">error latitude</string>
+    <string name="error_logitude">logitude</string>
+    <string name="error_login_exist">this login alredy exist</string>
 
 </resources>

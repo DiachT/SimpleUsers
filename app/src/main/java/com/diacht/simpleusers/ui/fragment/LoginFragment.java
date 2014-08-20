@@ -110,25 +110,25 @@ public class LoginFragment extends BaseFragment implements BaseActivity.OnSetDia
                     mSettings.setId(Utils.getIntFromCursor(cursor, UsersContract._ID));
                     Toast.makeText(getActivity(), R.string.ok_login, Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getActivity(), MainActivity.class));
-                    cursor.close();
                     getActivity().finish();
                 }
+                cursor.close();
             } else {
                 InputFormException.assertBlankEditText(mName, R.string.error_name);
                 InputFormException.assertEmailValid(mEmail, R.string.error_email);
                 InputFormException.assertTrue(mPassword.getText().toString().equals(
                                 mPasswordConfirm.getText().toString()),
                         R.string.error_valid_password);
-                InputFormException.assertTrue(Double.parseDouble(mLatitude.getText().toString()) < 85 &&
-                                Double.parseDouble(mLatitude.getText().toString()) > -85,
-                        R.string.error_latitude);
-                InputFormException.assertTrue(Double.parseDouble(mLogitude.getText().toString()) < 180 &&
-                                Double.parseDouble(mLogitude.getText().toString()) > -180,
-                        R.string.error_latitude);
                 if (mLatitude.getEditableText().toString().trim().length() == 0 ||
                         mLogitude.getEditableText().toString().trim().length() == 0) {
                     ((BaseActivity) getActivity()).ErrorCoordinatesDialog(R.string.error_coordinates, this, false);
                 } else {
+                    InputFormException.assertTrue(Double.parseDouble(mLatitude.getText().toString()) < 85 &&
+                                    Double.parseDouble(mLatitude.getText().toString()) > -85,
+                            R.string.error_latitude);
+                    InputFormException.assertTrue(Double.parseDouble(mLogitude.getText().toString()) < 180 &&
+                                    Double.parseDouble(mLogitude.getText().toString()) > -180,
+                            R.string.error_logitude);
                     mIsAddCoordinates = true;
                     setNewData();
                 }
@@ -140,18 +140,27 @@ public class LoginFragment extends BaseFragment implements BaseActivity.OnSetDia
     }
 
     private void setNewData() {
-        User user = new User(mName.getText().toString(), mEmail.getText().toString(),"",
-                mIsAddCoordinates ? Double.parseDouble(
-                        mLogitude.getEditableText().toString()) : User.NO_COORDINATES,
-                mIsAddCoordinates ? Double.parseDouble(
-                        mLatitude.getEditableText().toString()) : User.NO_COORDINATES,
-                mWww.getText().toString(), mPhone.getText().toString(), mPassword.getText().toString(),
-                mLogin.getText().toString());
-        mSettings.setId(Integer.valueOf(getActivity().getContentResolver().
-                insert(UsersContract.CONTENT_URI, user.toContentValues()).getLastPathSegment()));
-        Toast.makeText(getActivity(), R.string.ok_registration, Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(getActivity(), MainActivity.class));
-        getActivity().finish();
+        Cursor cursor = getActivity().getContentResolver().query(UsersContract.CONTENT_URI, null,
+                User.FIELD_LOGIN + "=? ",
+                new String[]{mLogin.getText().toString()},
+                null);
+        if(cursor.moveToFirst()){
+            ((BaseActivity) getActivity()).ErrorDialog(R.string.error_login_exist);
+        }else {
+            User user = new User(mName.getText().toString(), mEmail.getText().toString(), "",
+                    mIsAddCoordinates ? Double.parseDouble(
+                            mLogitude.getEditableText().toString()) : User.NO_COORDINATES,
+                    mIsAddCoordinates ? Double.parseDouble(
+                            mLatitude.getEditableText().toString()) : User.NO_COORDINATES,
+                    mWww.getText().toString(), mPhone.getText().toString(), mPassword.getText().toString(),
+                    mLogin.getText().toString());
+            mSettings.setId(Integer.valueOf(getActivity().getContentResolver().
+                    insert(UsersContract.CONTENT_URI, user.toContentValues()).getLastPathSegment()));
+            Toast.makeText(getActivity(), R.string.ok_registration, Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getActivity(), MainActivity.class));
+            getActivity().finish();
+        }
+        cursor.close();
     }
 
     @Override
