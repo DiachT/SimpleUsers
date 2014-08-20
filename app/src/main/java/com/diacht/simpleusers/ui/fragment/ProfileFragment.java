@@ -31,6 +31,7 @@ import com.diacht.simpleusers.ui.activity.LoginActivity;
 import com.diacht.simpleusers.ui.activity.MainActivity;
 import com.diacht.simpleusers.utils.InputFormException;
 import com.squareup.picasso.Picasso;
+import com.vk.sdk.VKSdk;
 
 import java.io.File;
 import java.util.Date;
@@ -164,6 +165,7 @@ public class ProfileFragment extends BaseFragment implements BaseActivity.OnSetD
             return true;
         } else
         if (item.getItemId() == R.id.action_logout) {
+            VKSdk.logout();
             startActivity(new Intent(getActivity(), LoginActivity.class));
             Toast.makeText(getActivity(), R.string.action_logout, Toast.LENGTH_SHORT).show();
             getActivity().finish();

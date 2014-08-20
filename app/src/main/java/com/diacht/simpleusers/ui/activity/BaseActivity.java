@@ -5,8 +5,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -14,6 +16,9 @@ import android.view.Window;
 import android.widget.Toast;
 
 import com.diacht.simpleusers.R;
+import com.diacht.simpleusers.dao.User;
+import com.diacht.simpleusers.db.UsersContract;
+import com.diacht.simpleusers.system.SUApplication;
 import com.diacht.simpleusers.ui.fragment.BaseFragment;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKScope;
@@ -24,6 +29,7 @@ import com.vk.sdk.api.VKApi;
 import com.vk.sdk.api.VKApiConst;
 import com.vk.sdk.api.VKError;
 import com.vk.sdk.api.VKParameters;
+import com.vk.sdk.api.VKParser;
 import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKResponse;
 import com.vk.sdk.api.model.VKAttachments;
@@ -40,7 +46,7 @@ public class BaseActivity extends Activity{
 
     public static final int REQUEST_VK = VKSdk.VK_SDK_REQUEST_CODE;
 
-    public String mSharingText;
+//    public String mSharingText;
     private BaseFragment mTargetFragment;
 
     public static final String[] sMyScope = new String[]{
@@ -95,7 +101,7 @@ public class BaseActivity extends Activity{
      * Выдает диалог о незаданных координатах
      */
     public void ErrorCoordinatesDialog(int error, final OnSetDialogChoiceListener listener, final boolean addCoordinates) {
-        ErrorCoordinatesDialog(getResources().getString(error),listener, addCoordinates);
+        ErrorCoordinatesDialog(getResources().getString(error), listener, addCoordinates);
     }
 
     public void ErrorCoordinatesDialog(String error, final OnSetDialogChoiceListener listener, final boolean addCoordinates) {
@@ -124,18 +130,30 @@ public class BaseActivity extends Activity{
         if(requestCode == REQUEST_VK) {
             VKUIHelper.onActivityResult(this, requestCode, resultCode, data);
             if (VKSdk.wakeUpSession()) {
-                if (mSharingText != null) {
-                    makePostVK(null, mSharingText);
+                int id = Integer.parseInt(VKSdk.getAccessToken().userId);
+                Cursor cursor = getContentResolver().query(UsersContract.CONTENT_URI, null,
+                        UsersContract._ID + "=? ",
+                        new String[]{String.valueOf(id)},
+                        null);
+                if(!cursor.moveToFirst()){
+                    ContentValues result = new ContentValues();
+                    result.put(UsersContract._ID, id);
+                    result.put(UsersContract.login, id);
+                    result.put(UsersContract.password, "");
+                    result.put(UsersContract.longitude, User.NO_COORDINATES);
+                    result.put(UsersContract.latitude, User.NO_COORDINATES);
+                    ((SUApplication)getApplication()).getSettings().setId(
+                            Integer.valueOf(getContentResolver().
+                            insert(UsersContract.CONTENT_URI, result).getLastPathSegment()));
                 }
+                Toast.makeText(this, R.string.ok_registration, Toast.LENGTH_SHORT).show();
+                cursor.close();
+                startActivity(new Intent(this, MainActivity.class));
+                finish();
             }
         }else{
             super.onActivityResult(requestCode, resultCode, data);
         }
-    }
-
-
-    public void setSharingVkText(String text){
-        mSharingText = text;
     }
 
     public void makePostVK(VKAttachments attachments, String message) {

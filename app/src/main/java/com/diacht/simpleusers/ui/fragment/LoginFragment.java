@@ -18,6 +18,8 @@ import com.diacht.simpleusers.system.Utils;
 import com.diacht.simpleusers.ui.activity.BaseActivity;
 import com.diacht.simpleusers.ui.activity.MainActivity;
 import com.diacht.simpleusers.utils.InputFormException;
+import com.vk.sdk.VKSdk;
+import com.vk.sdk.VKUIHelper;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -96,6 +98,11 @@ public class LoginFragment extends BaseFragment implements BaseActivity.OnSetDia
         setIsLogin();
     }
 
+    @OnClick(R.id.btn_vk)
+    public void onLoginVk() {
+        actionVk();
+    }
+
     @OnClick(R.id.log_btn)
     public void onOk() {
         try {
@@ -166,5 +173,21 @@ public class LoginFragment extends BaseFragment implements BaseActivity.OnSetDia
     @Override
     public void setDialogChoice(boolean data) {
         setNewData();
+    }
+
+    protected void actionVk(){
+        VKUIHelper.onCreate(getActivity());
+        VKSdk.initialize(((BaseActivity) getActivity()).sdkListener, "4515215");
+        if (!VKSdk.isLoggedIn()) {
+//            ((BaseActivity)getActivity()).setSharingVkText(getSharingText());
+            VKSdk.authorize(BaseActivity.sMyScope, true, false);
+//                VKSdk.logout();
+        }else {
+            if (VKSdk.wakeUpSession()) {
+                Toast.makeText(getActivity(), R.string.ok_login, Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getActivity(), MainActivity.class));
+                getActivity().finish();
+            }
+        }
     }
 }
