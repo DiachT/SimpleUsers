@@ -1,6 +1,5 @@
 package com.diacht.simpleusers.ui.activity;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -10,9 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.Window;
 import android.widget.Toast;
 
 import com.diacht.simpleusers.R;
@@ -25,15 +22,7 @@ import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.VKSdkListener;
 import com.vk.sdk.VKUIHelper;
-import com.vk.sdk.api.VKApi;
-import com.vk.sdk.api.VKApiConst;
 import com.vk.sdk.api.VKError;
-import com.vk.sdk.api.VKParameters;
-import com.vk.sdk.api.VKParser;
-import com.vk.sdk.api.VKRequest;
-import com.vk.sdk.api.VKResponse;
-import com.vk.sdk.api.model.VKAttachments;
-import com.vk.sdk.api.model.VKWallPostResult;
 
 /**
  * Base activity.
@@ -45,8 +34,6 @@ public class BaseActivity extends Activity{
     }
 
     public static final int REQUEST_VK = VKSdk.VK_SDK_REQUEST_CODE;
-
-//    public String mSharingText;
     private BaseFragment mTargetFragment;
 
     public static final String[] sMyScope = new String[]{
@@ -144,7 +131,7 @@ public class BaseActivity extends Activity{
                     result.put(UsersContract.latitude, User.NO_COORDINATES);
                     ((SUApplication)getApplication()).getSettings().setId(
                             Integer.valueOf(getContentResolver().
-                            insert(UsersContract.CONTENT_URI, result).getLastPathSegment()));
+                                    insert(UsersContract.CONTENT_URI, result).getLastPathSegment()));
                 }
                 Toast.makeText(this, R.string.ok_registration, Toast.LENGTH_SHORT).show();
                 cursor.close();
@@ -154,29 +141,6 @@ public class BaseActivity extends Activity{
         }else{
             super.onActivityResult(requestCode, resultCode, data);
         }
-    }
-
-    public void makePostVK(VKAttachments attachments, String message) {
-        VKRequest post = VKApi.wall().post(VKParameters.from(VKApiConst.OWNER_ID,
-                VKSdk.getAccessToken().userId,
-                VKApiConst.ATTACHMENTS, attachments, VKApiConst.MESSAGE, message));
-        post.setModelClass(VKWallPostResult.class);
-        post.executeWithListener(new VKRequest.VKRequestListener() {
-            @Override
-            public void onComplete(VKResponse response) {
-                super.onComplete(response);
-                Toast.makeText(BaseActivity.this, "add", Toast.LENGTH_SHORT).show();
-//                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(String.format("https://vk.com/wall"
-//                        + VKSdk.getAccessToken().userId + "_%s", ((VKWallPostResult) response.parsedModel).post_id)) );
-//                startActivity(i);
-            }
-
-            @Override
-            public void onError(VKError error) {
-                Toast.makeText(BaseActivity.this, "error", Toast.LENGTH_SHORT).show();
-                showError(error.apiError != null ? error.apiError : error);
-            }
-        });
     }
 
     public void showError(VKError error) {
