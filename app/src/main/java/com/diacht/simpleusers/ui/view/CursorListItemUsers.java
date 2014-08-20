@@ -54,7 +54,7 @@ public class CursorListItemUsers extends LinearLayout {
             view.setText(getContext().getText(text) + ": " + str);
         } else {
             view.setVisibility(View.GONE);
-    }
+        }
     }
 
     public void setData(Cursor cursor) {

@@ -43,5 +43,7 @@
     <string name="you_here">you here</string>
     <string name="coordinates">coordinates</string>
     <string name="hint_password_new">new password</string>
+    <string name="error_pass_new">Error new password</string>
+    <string name="ok_edit_profile">Profile edit</string>
 
 </resources>
