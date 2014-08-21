@@ -26,23 +26,14 @@ public class User implements Serializable {
     public static final String FIELD_PASSWORD = "password";
     public static final String FIELD_LOGIN = "login";
 
-    @SerializedName(FIELD_NAME)
     private String mName;
-    @SerializedName(FIELD_EMAIL)
     private String mEmail;
-    @SerializedName(FIELD_AVATAR)
     private String mAvatar;
-    @SerializedName(FIELD_LONGITUDE)
     private double mLongitude;
-    @SerializedName(FIELD_LATITUDE)
     private double mLatitude;
-    @SerializedName(FIELD_WWW)
     private String mWww;
-    @SerializedName(FIELD_PHONE)
     private String mPhone;
-    @SerializedName(FIELD_PASSWORD)
     private String mPassword;
-    @SerializedName(FIELD_LOGIN)
     private String mLogin;
 
     public User(String name, String email, String avatar, double longitude,

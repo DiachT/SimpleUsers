@@ -13,7 +13,6 @@ import android.widget.Toast;
 import com.diacht.simpleusers.R;
 import com.diacht.simpleusers.dao.User;
 import com.diacht.simpleusers.db.UsersContract;
-import com.diacht.simpleusers.system.SUSettings;
 import com.diacht.simpleusers.system.Utils;
 import com.diacht.simpleusers.ui.activity.BaseActivity;
 import com.diacht.simpleusers.ui.activity.MainActivity;

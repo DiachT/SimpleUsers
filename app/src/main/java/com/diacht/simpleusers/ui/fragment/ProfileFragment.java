@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,9 +32,10 @@ import com.diacht.simpleusers.ui.activity.LoginActivity;
 import com.diacht.simpleusers.utils.InputFormException;
 import com.squareup.picasso.Picasso;
 import com.vk.sdk.VKSdk;
-import com.vk.sdk.VKUIHelper;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Date;
 
 import butterknife.ButterKnife;
@@ -196,12 +198,7 @@ public class ProfileFragment extends BaseFragment implements BaseActivity.OnSetD
 
     @OnClick(R.id.prof_foto)
     public void onFoto() {
-        File filesDir = getActivity().getExternalFilesDir("foto");
-        File foto = new File(filesDir, mLoginText + (new Date()).getTime() + ".jpg");
-        Uri fileUri = Uri.fromFile(foto);
-        mNewFotoPath = fileUri.toString();
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE );
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
         startActivityForResult(intent, TAKE_PICTURE);
     }
 
@@ -210,16 +207,29 @@ public class ProfileFragment extends BaseFragment implements BaseActivity.OnSetD
                                  Intent resultData) {
         super.onActivityResult(requestCode, resultCode, resultData);
         if (requestCode == TAKE_PICTURE && resultCode == Activity.RESULT_OK) {
-            if (mAvatar != null && !TextUtils.isEmpty(mAvatar)) {
-                new File(mAvatar).delete();
+            try {
+                Bundle extras = resultData.getExtras();
+                Bitmap imageBitmap = (Bitmap) extras.get("data");
+                File filesDir = getActivity().getExternalFilesDir("foto");
+                File foto = new File(filesDir, mLoginText + (new Date()).getTime() + ".jpg");
+                Uri fileUri = Uri.fromFile(foto);
+                mNewFotoPath = fileUri.toString();
+                FileOutputStream out = new FileOutputStream(foto);
+                imageBitmap.compress(Bitmap.CompressFormat.PNG, 30, out);
+                out.close();
+                if (mAvatar != null && !TextUtils.isEmpty(mAvatar)) {
+                    new File(mAvatar).delete();
+                }
+                ContentValues result = new ContentValues();
+                result.put(UsersContract.avatar, mNewFotoPath);
+                getActivity().getContentResolver().update(UsersContract.CONTENT_URI, result,
+                        UsersContract._ID + "= ?", new String[]{String.valueOf(mSettings.getId())});
+                Picasso.with(getActivity()).load(mNewFotoPath).skipMemoryCache()
+                        .placeholder(R.drawable.no_avatar).into(mFoto);
+                Toast.makeText(getActivity(), R.string.foto_update, Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            ContentValues result = new ContentValues();
-            result.put(UsersContract.avatar, mNewFotoPath);
-            getActivity().getContentResolver().update(UsersContract.CONTENT_URI, result,
-                    UsersContract._ID + "= ?", new String[]{String.valueOf(mSettings.getId())});
-            Picasso.with(getActivity()).load(mNewFotoPath).skipMemoryCache()
-                    .placeholder(R.drawable.no_avatar).into(mFoto);
-            Toast.makeText(getActivity(), R.string.foto_update, Toast.LENGTH_SHORT).show();
         }
     }
 
