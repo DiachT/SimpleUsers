@@ -215,7 +215,8 @@ public class ProfileFragment extends BaseFragment implements BaseActivity.OnSetD
                 Uri fileUri = Uri.fromFile(foto);
                 mNewFotoPath = fileUri.toString();
                 FileOutputStream out = new FileOutputStream(foto);
-                imageBitmap.compress(Bitmap.CompressFormat.PNG, 30, out);
+                imageBitmap.compress(Bitmap.CompressFormat.JPEG, 60, out);
+                imageBitmap.recycle();
                 out.close();
                 if (mAvatar != null && !TextUtils.isEmpty(mAvatar)) {
                     new File(mAvatar).delete();
