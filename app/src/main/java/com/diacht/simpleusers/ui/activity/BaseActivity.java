@@ -18,7 +18,6 @@ import com.diacht.simpleusers.dao.User;
 import com.diacht.simpleusers.db.UsersContract;
 import com.diacht.simpleusers.system.SUApplication;
 import com.vk.sdk.VKAccessToken;
-import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.VKSdkListener;
 import com.vk.sdk.VKUIHelper;

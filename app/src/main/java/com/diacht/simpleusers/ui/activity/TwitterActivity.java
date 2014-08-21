@@ -113,15 +113,15 @@ public class TwitterActivity extends Activity {
                 Toast.makeText(TwitterActivity.this, R.string.ok_registration, Toast.LENGTH_SHORT).show();
                 cursor.close();
                 startActivity(new Intent(TwitterActivity.this, MainActivity.class));
-                finish();
+            }else{
+                startActivity(new Intent(TwitterActivity.this, LoginActivity.class));
             }
+            finish();
         }
     }
 
     /**
      * check if the account is authorized
-     *
-     * @return
      */
     private boolean isConnected() {
         return mSharedPreferences.getString(PREF_KEY_TOKEN, null) != null;
