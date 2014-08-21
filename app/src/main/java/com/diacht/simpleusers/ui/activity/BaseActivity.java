@@ -16,7 +16,6 @@ import com.diacht.simpleusers.R;
 import com.diacht.simpleusers.dao.User;
 import com.diacht.simpleusers.db.UsersContract;
 import com.diacht.simpleusers.system.SUApplication;
-import com.diacht.simpleusers.ui.fragment.BaseFragment;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
@@ -34,7 +33,6 @@ public class BaseActivity extends Activity{
     }
 
     public static final int REQUEST_VK = VKSdk.VK_SDK_REQUEST_CODE;
-    private BaseFragment mTargetFragment;
 
     public static final String[] sMyScope = new String[]{
             VKScope.WALL
@@ -60,7 +58,8 @@ public class BaseActivity extends Activity{
     }
 
     public void startFragment(Fragment fragment, boolean backStack, boolean animation) {
-        startFragment(R.id.container, fragment, backStack, fragment.getClass().getSimpleName(), animation);
+        startFragment(R.id.container, fragment, backStack,
+                fragment.getClass().getSimpleName(), animation);
     }
 
     public void startFragment(Fragment fragment, boolean backStack) {
@@ -87,7 +86,8 @@ public class BaseActivity extends Activity{
     /**
      * Выдает диалог о незаданных координатах
      */
-    public void ErrorCoordinatesDialog(int error, final OnSetDialogChoiceListener listener, final boolean addCoordinates) {
+    public void ErrorCoordinatesDialog(int error, final OnSetDialogChoiceListener listener,
+                                       final boolean addCoordinates) {
         ErrorCoordinatesDialog(getResources().getString(error), listener, addCoordinates);
     }
 
@@ -125,7 +125,7 @@ public class BaseActivity extends Activity{
                 if(!cursor.moveToFirst()){
                     ContentValues result = new ContentValues();
                     result.put(UsersContract._ID, id);
-                    result.put(UsersContract.login, id);
+//                    result.put(UsersContract.login, id);
                     result.put(UsersContract.password, "");
                     result.put(UsersContract.longitude, User.NO_COORDINATES);
                     result.put(UsersContract.latitude, User.NO_COORDINATES);
@@ -156,9 +156,7 @@ public class BaseActivity extends Activity{
 
     public final VKSdkListener sdkListener = new VKSdkListener() {
         @Override
-        public void onCaptchaError(VKError captchaError) {
-//            new VKCaptchaDialog(captchaError).show();
-        }
+        public void onCaptchaError(VKError captchaError) {}
 
         @Override
         public void onTokenExpired(VKAccessToken expiredToken) {
@@ -173,27 +171,15 @@ public class BaseActivity extends Activity{
         }
 
         @Override
-        public void onReceiveNewToken(VKAccessToken newToken) {
-            /*startTestActivity();*/
-        }
+        public void onReceiveNewToken(VKAccessToken newToken) {}
 
         @Override
-        public void onAcceptUserToken(VKAccessToken token) {
-//            startTestActivity();
-        }
+        public void onAcceptUserToken(VKAccessToken token) {}
     };
 
     @Override
     protected void onResume() {
         super.onResume();
         VKUIHelper.onResume(this);
-    }
-
-    @Override
-    public void onAttachFragment(Fragment fragment) {
-        super.onAttachFragment(fragment);
-        if (fragment instanceof BaseFragment) {
-            mTargetFragment = (BaseFragment) fragment;
-        }
     }
 }

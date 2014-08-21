@@ -28,10 +28,10 @@ import com.diacht.simpleusers.db.UsersContract;
 import com.diacht.simpleusers.system.Utils;
 import com.diacht.simpleusers.ui.activity.BaseActivity;
 import com.diacht.simpleusers.ui.activity.LoginActivity;
-import com.diacht.simpleusers.ui.activity.MainActivity;
 import com.diacht.simpleusers.utils.InputFormException;
 import com.squareup.picasso.Picasso;
 import com.vk.sdk.VKSdk;
+import com.vk.sdk.VKUIHelper;
 
 import java.io.File;
 import java.util.Date;
@@ -64,6 +64,8 @@ public class ProfileFragment extends BaseFragment implements BaseActivity.OnSetD
     protected EditText mWww;
     @InjectView(R.id.prof_phone)
     protected EditText mPhone;
+    @InjectView(R.id.prof_no_login)
+    protected EditText mProfNoLogin;
     @InjectView(R.id.prof_foto)
     protected ImageView mFoto;
     private Cursor mCursor;
@@ -101,7 +103,14 @@ public class ProfileFragment extends BaseFragment implements BaseActivity.OnSetD
     private void setProfileData() {
         mName.setText(Utils.getStringFromCursor(mCursor, User.FIELD_NAME));
         mLoginText = Utils.getStringFromCursor(mCursor, User.FIELD_LOGIN);
-        mLogin.setText(mLoginText);
+        if(TextUtils.isEmpty(mLoginText)){
+            mProfNoLogin.setVisibility(View.VISIBLE);
+            mLogin.setVisibility(View.GONE);
+        }else {
+            mProfNoLogin.setVisibility(View.GONE);
+            mLogin.setVisibility(View.VISIBLE);
+            mLogin.setText(mLoginText);
+        }
         mEmail.setText(Utils.getStringFromCursor(mCursor, User.FIELD_EMAIL));
         mPhone.setText(Utils.getStringFromCursor(mCursor, User.FIELD_PHONE));
         mWww.setText(Utils.getStringFromCursor(mCursor, User.FIELD_WWW));
@@ -165,7 +174,9 @@ public class ProfileFragment extends BaseFragment implements BaseActivity.OnSetD
             return true;
         } else
         if (item.getItemId() == R.id.action_logout) {
-            VKSdk.logout();
+            try{
+                VKSdk.logout();
+            }catch (Exception e){}
             startActivity(new Intent(getActivity(), LoginActivity.class));
             Toast.makeText(getActivity(), R.string.action_logout, Toast.LENGTH_SHORT).show();
             getActivity().finish();
@@ -223,6 +234,18 @@ public class ProfileFragment extends BaseFragment implements BaseActivity.OnSetD
     @OnClick(R.id.prof_btn)
     public void onOk() {
         try {
+            if(mProfNoLogin.getVisibility() == View.VISIBLE) {
+                InputFormException.assertBlankEditText(mProfNoLogin, R.string.error_login);
+                InputFormException.assertBlankEditText(mPasswordNew, R.string.error_pass_new);
+                Cursor cursor = getActivity().getContentResolver().query(UsersContract.CONTENT_URI, null,
+                        User.FIELD_LOGIN + "=? ",
+                        new String[]{mProfNoLogin.getText().toString()},
+                        null);
+                if (cursor.moveToFirst()) {
+                    new InputFormException(R.string.error_login_exist);
+                }
+                cursor.close();
+            }
             InputFormException.assertTrue(mPassword.getText().toString().equals(
                             Utils.getStringFromCursor(mCursor, User.FIELD_PASSWORD)),
                     R.string.error_pass);
@@ -248,6 +271,9 @@ public class ProfileFragment extends BaseFragment implements BaseActivity.OnSetD
         result.put(UsersContract.email, mEmail.getText().toString());
         result.put(UsersContract.phone, mPhone.getText().toString());
         result.put(UsersContract.www, mWww.getText().toString());
+        if(mProfNoLogin.getVisibility() == View.VISIBLE) {
+            result.put(UsersContract.login, mProfNoLogin.getText().toString());
+        }
         if (TextUtils.isEmpty(mPasswordNew.getText().toString())) {
             result.put(UsersContract.password, mPassword.getText().toString());
         }else{
