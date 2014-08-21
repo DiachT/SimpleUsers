@@ -7,6 +7,7 @@ import android.app.FragmentTransaction;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,7 +36,7 @@ public class BaseActivity extends Activity{
     public static final int REQUEST_VK = VKSdk.VK_SDK_REQUEST_CODE;
 
     public static final String[] sMyScope = new String[]{
-            VKScope.WALL
+//            VKScope.WALL
     };
 
     @Override
@@ -181,5 +182,17 @@ public class BaseActivity extends Activity{
     protected void onResume() {
         super.onResume();
         VKUIHelper.onResume(this);
+    }
+
+    /**
+     * disconnectTwitter
+     * Remove Token, Secret from preferences
+     */
+    public void disconnectTwitter() {
+        SharedPreferences sharedPreferences = getSharedPreferences(TwitterActivity.PREFERENCE_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(TwitterActivity.PREF_KEY_TOKEN);
+        editor.remove(TwitterActivity.PREF_KEY_SECRET);
+        editor.commit();
     }
 }

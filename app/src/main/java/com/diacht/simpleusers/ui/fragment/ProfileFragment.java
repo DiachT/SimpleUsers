@@ -177,6 +177,7 @@ public class ProfileFragment extends BaseFragment implements BaseActivity.OnSetD
             try{
                 VKSdk.logout();
             }catch (Exception e){}
+            ((BaseActivity) getActivity()).disconnectTwitter();
             startActivity(new Intent(getActivity(), LoginActivity.class));
             Toast.makeText(getActivity(), R.string.action_logout, Toast.LENGTH_SHORT).show();
             getActivity().finish();

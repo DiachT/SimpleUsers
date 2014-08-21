@@ -17,6 +17,7 @@ import com.diacht.simpleusers.system.SUSettings;
 import com.diacht.simpleusers.system.Utils;
 import com.diacht.simpleusers.ui.activity.BaseActivity;
 import com.diacht.simpleusers.ui.activity.MainActivity;
+import com.diacht.simpleusers.ui.activity.TwitterActivity;
 import com.diacht.simpleusers.utils.InputFormException;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.VKUIHelper;
@@ -101,6 +102,11 @@ public class LoginFragment extends BaseFragment implements BaseActivity.OnSetDia
     @OnClick(R.id.btn_vk)
     public void onLoginVk() {
         actionVk();
+    }
+
+    @OnClick(R.id.btn_tw)
+    public void onLoginTw() {
+        startActivity(new Intent(getActivity(), TwitterActivity.class));
     }
 
     @OnClick(R.id.log_btn)
