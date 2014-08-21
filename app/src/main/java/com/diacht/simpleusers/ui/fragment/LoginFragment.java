@@ -123,8 +123,12 @@ public class LoginFragment extends BaseFragment implements BaseActivity.OnSetDia
                     Toast.makeText(getActivity(), R.string.ok_login, Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getActivity(), MainActivity.class));
                     getActivity().finish();
+                    cursor.close();
+                }else{
+                    ((BaseActivity) getActivity()).ErrorDialog(R.string.error_login_pass);
+                    cursor.close();
+                    return;
                 }
-                cursor.close();
             } else {
                 InputFormException.assertBlankEditText(mName, R.string.error_name);
                 InputFormException.assertEmailValid(mEmail, R.string.error_email);

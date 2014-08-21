@@ -253,7 +253,9 @@ public class ProfileFragment extends BaseFragment implements BaseActivity.OnSetD
                         new String[]{mProfNoLogin.getText().toString()},
                         null);
                 if (cursor.moveToFirst()) {
-                    new InputFormException(R.string.error_login_exist);
+                    ((BaseActivity) getActivity()).ErrorDialog(R.string.error_login_exist);
+                    cursor.close();
+                    return;
                 }
                 cursor.close();
             }
