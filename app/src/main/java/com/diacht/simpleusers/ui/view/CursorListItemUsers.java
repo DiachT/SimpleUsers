@@ -49,7 +49,7 @@ public class CursorListItemUsers extends LinearLayout {
 
     private void setDataToTextView(Cursor cursor, TextView view, String field, int text) {
         String str = Utils.getStringFromCursor(cursor, field);
-        if (str.length() > 0) {
+        if (str != null && str.length() > 0) {
             view.setVisibility(View.VISIBLE);
             view.setText(getContext().getText(text) + ": " + str);
         } else {

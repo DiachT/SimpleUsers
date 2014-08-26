@@ -7,8 +7,10 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.diacht.simpleusers.R;
@@ -76,6 +78,16 @@ public class LoginFragment extends BaseFragment implements BaseActivity.OnSetDia
                 return false;
             }
         });
+        mPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (mIsLogin) {
+                    onOk();
+                    return true;
+                }
+                return false;
+            }
+        });
         return view;
     }
 
@@ -90,6 +102,7 @@ public class LoginFragment extends BaseFragment implements BaseActivity.OnSetDia
             mPhone.setVisibility(View.GONE);
             mRegistration.setText(R.string.registration);
             setTitle(R.string.login);
+            mPassword.setImeOptions(EditorInfo.IME_ACTION_DONE);
         }else{
             mPasswordConfirm.setVisibility(View.VISIBLE);
             mName.setVisibility(View.VISIBLE);
@@ -100,6 +113,7 @@ public class LoginFragment extends BaseFragment implements BaseActivity.OnSetDia
             mPhone.setVisibility(View.VISIBLE);
             mRegistration.setText(R.string.login);
             setTitle(R.string.registration);
+            mPassword.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         }
     }
 
