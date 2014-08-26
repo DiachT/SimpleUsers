@@ -3,6 +3,7 @@ package com.diacht.simpleusers.ui.fragment;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,6 +66,16 @@ public class LoginFragment extends BaseFragment implements BaseActivity.OnSetDia
         mIsLogin = getActivity().getContentResolver().query(UsersContract.CONTENT_URI, null,
                 null, null, null).moveToFirst();
         setIsLogin();
+        mPassword.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (mIsLogin && (event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    onOk();
+                    return true;
+                }
+                return false;
+            }
+        });
         return view;
     }
 
