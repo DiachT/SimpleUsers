@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v7.internal.widget.LinearLayoutICS;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +31,8 @@ import com.diacht.simpleusers.db.UsersContract;
 import com.diacht.simpleusers.system.Utils;
 import com.diacht.simpleusers.ui.activity.BaseActivity;
 import com.diacht.simpleusers.ui.activity.LoginActivity;
+import com.diacht.simpleusers.ui.activity.MainActivity;
+import com.diacht.simpleusers.ui.dialog.InputPasswordDialogFragment;
 import com.diacht.simpleusers.utils.InputFormException;
 import com.squareup.picasso.Picasso;
 import com.vk.sdk.VKSdk;
@@ -48,10 +52,10 @@ import butterknife.OnClick;
  */
 public class ProfileFragment extends BaseFragment implements BaseActivity.OnSetDialogChoiceListener {
     private static final int TAKE_PICTURE = 1234;
+    private static final int DIALOG_PASSWORD = 1235;
+    private static final String TAG = ProfileFragment.class.getSimpleName();
     @InjectView(R.id.prof_login)
     protected TextView mLogin;
-    @InjectView(R.id.prof_password)
-    protected EditText mPassword;
     @InjectView(R.id.prof_password_new)
     protected EditText mPasswordNew;
     @InjectView(R.id.prof_password_confirm)
@@ -70,12 +74,19 @@ public class ProfileFragment extends BaseFragment implements BaseActivity.OnSetD
     protected EditText mProfNoLogin;
     @InjectView(R.id.prof_foto)
     protected ImageView mFoto;
+    @InjectView(R.id.prof_ll_data)
+    protected LinearLayout mLlData;
+    @InjectView(R.id.prof_ll_password)
+    protected LinearLayout mLlPassword;
+    @InjectView(R.id.prof_edit_login_data)
+    protected Button mBtnEditData;
     private Cursor mCursor;
     private ContentObserver mObserver;
     private boolean mIsAddCoordinates = false;
     private String mAvatar;
     private String mLoginText;
     private String mNewFotoPath;
+    private boolean mIsEditLogin;
 
     public static ProfileFragment newInstance() {
         return new ProfileFragment();
@@ -127,6 +138,17 @@ public class ProfileFragment extends BaseFragment implements BaseActivity.OnSetD
         }
         if (mAvatar != null && !TextUtils.isEmpty(mAvatar)) {
             Picasso.with(getActivity()).load(mAvatar).placeholder(R.drawable.no_avatar).into(mFoto);
+        }
+    }
+
+    private boolean isProfileEdit() {
+        if(mIsEditLogin) {
+            return (mProfNoLogin.getText().length() > 0) || (mPasswordNew.getText().length() > 0);
+        }else{
+            return (!mName.getText().toString().equals(Utils.getStringFromCursor(mCursor, User.FIELD_NAME))) ||
+                    (!mEmail.getText().toString().equals(Utils.getStringFromCursor(mCursor, User.FIELD_EMAIL))) ||
+                    (!mPhone.getText().toString().equals(Utils.getStringFromCursor(mCursor, User.FIELD_PHONE))) ||
+                    (!mWww.getText().toString().equals(Utils.getStringFromCursor(mCursor, User.FIELD_WWW)));
         }
     }
 
@@ -196,6 +218,24 @@ public class ProfileFragment extends BaseFragment implements BaseActivity.OnSetD
         return view;
     }
 
+    @OnClick(R.id.prof_edit_login_data)
+    public void onEditData() {
+        mIsEditLogin = !mIsEditLogin;
+        setEditData();
+    }
+
+    private void setEditData() {
+        if(mIsEditLogin){
+            mLlData.setVisibility(View.GONE);
+            mLlPassword.setVisibility(View.VISIBLE);
+            mBtnEditData.setText(R.string.edit_profile_data);
+        }else {
+            mLlData.setVisibility(View.VISIBLE);
+            mLlPassword.setVisibility(View.GONE);
+            mBtnEditData.setText(R.string.edit_login_data);
+        }
+    }
+
     @OnClick(R.id.prof_foto)
     public void onFoto() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE );
@@ -231,6 +271,8 @@ public class ProfileFragment extends BaseFragment implements BaseActivity.OnSetD
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }else  if (requestCode == DIALOG_PASSWORD && resultCode == Activity.RESULT_OK) {
+            setNewData();
         }
     }
 
@@ -246,32 +288,33 @@ public class ProfileFragment extends BaseFragment implements BaseActivity.OnSetD
     @OnClick(R.id.prof_btn)
     public void onOk() {
         try {
-            if(mProfNoLogin.getVisibility() == View.VISIBLE) {
-                InputFormException.assertBlankEditText(mProfNoLogin, R.string.error_login);
-                InputFormException.assertBlankEditText(mPasswordNew, R.string.error_pass_new);
-                Cursor cursor = getActivity().getContentResolver().query(UsersContract.CONTENT_URI, null,
-                        User.FIELD_LOGIN + "=? ",
-                        new String[]{mProfNoLogin.getText().toString()},
-                        null);
-                if (cursor.moveToFirst()) {
-                    ((BaseActivity) getActivity()).ErrorDialog(R.string.error_login_exist);
+            if(mIsEditLogin) {
+                if (mProfNoLogin.getVisibility() == View.VISIBLE) {
+                    InputFormException.assertBlankEditText(mProfNoLogin, R.string.error_login);
+                    InputFormException.assertBlankEditText(mPasswordNew, R.string.error_pass_new);
+                    Cursor cursor = getActivity().getContentResolver().query(UsersContract.CONTENT_URI, null,
+                            User.FIELD_LOGIN + "=? ",
+                            new String[]{mProfNoLogin.getText().toString()},
+                            null);
+                    if (cursor.moveToFirst()) {
+                        ((BaseActivity) getActivity()).ErrorDialog(R.string.error_login_exist);
+                        cursor.close();
+                        return;
+                    }
                     cursor.close();
-                    return;
                 }
-                cursor.close();
-            }
-            InputFormException.assertTrue(mPassword.getText().toString().equals(
-                            Utils.getStringFromCursor(mCursor, User.FIELD_PASSWORD)),
-                    R.string.error_pass);
-            InputFormException.assertBlankEditText(mName, R.string.error_name);
-            InputFormException.assertEmailValid(mEmail, R.string.error_email);
-            InputFormException.assertTrue(mPasswordNew.getText().toString().equals(
-                            mPasswordConfirm.getText().toString()),
-                    R.string.error_valid_password);
-            if(!mIsAddCoordinates){
-                ((BaseActivity) getActivity()).ErrorCoordinatesDialog(R.string.error_coordinates, this, false);
-            } else {
-                setNewData();
+                InputFormException.assertTrue(mPasswordNew.getText().toString().equals(
+                                mPasswordConfirm.getText().toString()),
+                        R.string.error_valid_password);
+                showPasswordDialog();
+            }else {
+                InputFormException.assertBlankEditText(mName, R.string.error_name);
+                InputFormException.assertEmailValid(mEmail, R.string.error_email);
+                if (!mIsAddCoordinates) {
+                    ((BaseActivity) getActivity()).ErrorCoordinatesDialog(R.string.error_coordinates, this, false);
+                } else {
+                    showPasswordDialog();
+                }
             }
         }
         catch(InputFormException e){
@@ -279,25 +322,38 @@ public class ProfileFragment extends BaseFragment implements BaseActivity.OnSetD
         }
     }
 
-    private void setNewData() {
-        ContentValues result = new ContentValues();
-        result.put(UsersContract.name, mName.getText().toString());
-        result.put(UsersContract.email, mEmail.getText().toString());
-        result.put(UsersContract.phone, mPhone.getText().toString());
-        result.put(UsersContract.www, mWww.getText().toString());
-        if(mProfNoLogin.getVisibility() == View.VISIBLE) {
-            result.put(UsersContract.login, mProfNoLogin.getText().toString());
-        }
-        if (TextUtils.isEmpty(mPasswordNew.getText().toString())) {
-            result.put(UsersContract.password, mPassword.getText().toString());
+    private void showPasswordDialog() {
+        if (isProfileEdit()) {
+            InputPasswordDialogFragment dialog = InputPasswordDialogFragment.
+                    newInstance(Utils.getStringFromCursor(mCursor, User.FIELD_PASSWORD));
+            dialog.setTargetFragment(this, DIALOG_PASSWORD);
+            dialog.show(getFragmentManager(), TAG);
         }else{
-            result.put(UsersContract.password, mPasswordNew.getText().toString());
+            startActivity(new Intent(getActivity(), MainActivity.class));
+            getActivity().finish();
+        }
+    }
+
+    public void setNewData() {
+        ContentValues result = new ContentValues();
+        if(mIsEditLogin){
+            if(mProfNoLogin.getVisibility() == View.VISIBLE) {
+                result.put(UsersContract.login, mProfNoLogin.getText().toString());
+            }
+            if (!TextUtils.isEmpty(mPasswordNew.getText().toString())) {
+                result.put(UsersContract.password, mPasswordNew.getText().toString());
+            }
+        }else {
+            result.put(UsersContract.name, mName.getText().toString());
+            result.put(UsersContract.email, mEmail.getText().toString());
+            result.put(UsersContract.phone, mPhone.getText().toString());
+            result.put(UsersContract.www, mWww.getText().toString());
         }
         getActivity().getContentResolver().update(UsersContract.CONTENT_URI, result,
                 UsersContract._ID + "= ?", new String[]{String.valueOf(mSettings.getId())});
         Toast.makeText(getActivity(), R.string.ok_edit_profile, Toast.LENGTH_SHORT).show();
-//        startActivity(new Intent(getActivity(), MainActivity.class));
-//        getActivity().finish();
+        startActivity(new Intent(getActivity(), MainActivity.class));
+        getActivity().finish();
     }
 
     @Override
@@ -305,7 +361,7 @@ public class ProfileFragment extends BaseFragment implements BaseActivity.OnSetD
         if (addCoordinates) {
             startFragment(MapFragmentCoordinates.newInstance(), true);
         } else {
-            setNewData();
+            showPasswordDialog();
         }
     }
 }

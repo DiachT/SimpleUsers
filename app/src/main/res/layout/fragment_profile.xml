@@ -2,103 +2,110 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="@dimen/padding">
-
-        <ImageView
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop"
-            android:layout_gravity="center"
-            android:src="@drawable/no_avatar"
-            android:id="@+id/prof_foto" />
-        <TextView
-            style="@style/TextViewProfile"
-            android:hint="@string/hint_login" />
-        <TextView
-            style="@style/TextViewProfile"
-            android:textSize="20dp"
-            android:id="@+id/prof_login"/>
-        <EditText
-            android:id="@+id/prof_no_login"
-            style="@style/EditTextLogin"
-            android:hint="@string/hint_login"
-            android:visibility="gone"/>
-        <TextView
-            style="@style/TextViewProfile"
-            android:hint="@string/hint_password" />
-        <EditText
-            android:id="@+id/prof_password"
-            style="@style/EditTextLogin"
-            android:hint="@string/hint_password"
-            android:inputType="textPassword"/>
-        <TextView
-            style="@style/TextViewProfile"
-            android:hint="@string/hint_password_new" />
-        <EditText
-            android:id="@+id/prof_password_new"
-            style="@style/EditTextLogin"
-            android:hint="@string/hint_password_new"
-            android:inputType="textPassword"/>
-        <TextView
-            style="@style/TextViewProfile"
-            android:hint="@string/hint_password_confirm" />
-        <EditText
-            android:id="@+id/prof_password_confirm"
-            style="@style/EditTextLogin"
-            android:inputType="textPassword"
-            android:hint="@string/hint_password_confirm" />
-        <TextView
-            style="@style/TextViewProfile"
-            android:hint="@string/hint_name" />
-        <EditText
-            android:id="@+id/prof_name"
-            style="@style/EditTextLogin"
-            android:inputType="textPersonName"
-            android:hint="@string/hint_name" />
-        <TextView
-            style="@style/TextViewProfile"
-            android:hint="@string/hint_email" />
-        <EditText
-            android:id="@+id/prof_email"
-            style="@style/EditTextLogin"
-            android:hint="@string/hint_email"
-            android:inputType="textEmailAddress"/>
-        <TextView
-            style="@style/TextViewProfile"
-            android:hint="@string/hint_www" />
-        <EditText
-            android:id="@+id/prof_www"
-            style="@style/EditTextLogin"
-            android:hint="@string/hint_www"
-            android:inputType="textUri"/>
-        <TextView
-            style="@style/TextViewProfile"
-            android:hint="@string/hint_phone" />
-        <EditText
-            android:id="@+id/prof_phone"
-            style="@style/EditTextLogin"
-            android:hint="@string/hint_phone"
-            android:inputType="phone"/>
-        <TextView
-            style="@style/TextViewProfile"
-            android:hint="@string/coordinates" />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/coordinates"
-            android:id="@+id/prof_coordinates"
-            android:layout_gravity="left" />
+            android:text="@string/edit_login_data"
+            android:id="@+id/prof_edit_login_data"/>
+        <LinearLayout
+            android:id="@+id/prof_ll_password"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                style="@style/TextViewProfile"
+                android:hint="@string/hint_login" />
+            <TextView
+                style="@style/TextViewProfile"
+                android:textSize="20dp"
+                android:id="@+id/prof_login"/>
+            <EditText
+                android:id="@+id/prof_no_login"
+                style="@style/EditTextLogin"
+                android:hint="@string/hint_login"
+                android:visibility="gone"/>
+            <TextView
+                style="@style/TextViewProfile"
+                android:hint="@string/hint_password_new" />
+            <EditText
+                android:id="@+id/prof_password_new"
+                style="@style/EditTextLogin"
+                android:hint="@string/hint_password_new"
+                android:inputType="textPassword"/>
+            <TextView
+                style="@style/TextViewProfile"
+                android:hint="@string/hint_password_confirm" />
+            <EditText
+                android:id="@+id/prof_password_confirm"
+                style="@style/EditTextLogin"
+                android:inputType="textPassword"
+                android:hint="@string/hint_password_confirm" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/prof_ll_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                android:layout_gravity="center"
+                android:src="@drawable/no_avatar"
+                android:id="@+id/prof_foto" />
+            <TextView
+                style="@style/TextViewProfile"
+                android:hint="@string/hint_name" />
+            <EditText
+                android:id="@+id/prof_name"
+                style="@style/EditTextLogin"
+                android:inputType="textPersonName"
+                android:hint="@string/hint_name" />
+            <TextView
+                style="@style/TextViewProfile"
+                android:hint="@string/hint_email" />
+            <EditText
+                android:id="@+id/prof_email"
+                style="@style/EditTextLogin"
+                android:hint="@string/hint_email"
+                android:inputType="textEmailAddress"/>
+            <TextView
+                style="@style/TextViewProfile"
+                android:hint="@string/hint_www" />
+            <EditText
+                android:id="@+id/prof_www"
+                style="@style/EditTextLogin"
+                android:hint="@string/hint_www"
+                android:inputType="textUri"/>
+            <TextView
+                style="@style/TextViewProfile"
+                android:hint="@string/hint_phone" />
+            <EditText
+                android:id="@+id/prof_phone"
+                style="@style/EditTextLogin"
+                android:hint="@string/hint_phone"
+                android:inputType="phone"/>
+            <TextView
+                style="@style/TextViewProfile"
+                android:hint="@string/coordinates" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/coordinates"
+                android:id="@+id/prof_coordinates"
+                android:layout_gravity="left" />
+        </LinearLayout>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/ok"
             android:id="@+id/prof_btn"
             android:layout_gravity="center_horizontal" />
-
     </LinearLayout>
 </ScrollView>

@@ -35,7 +35,7 @@
     <string name="error_login">Error login</string>
     <string name="error_login_pass">Incorrect login or password</string>
     <string name="error_latitude">error latitude</string>
-    <string name="error_logitude">logitude</string>
+    <string name="error_logitude">error logitude</string>
     <string name="error_login_exist">this login alredy exist</string>
     <string name="error_pass_new">Error new password</string>
 
@@ -56,5 +56,8 @@
     <string name="hint_password_new">new password</string>
     <string name="ok_edit_profile">Profile edit</string>
     <string name="foto_update">foto update</string>
+    <string name="dialog_type_password">type password:</string>
+    <string name="edit_login_data">edit login data</string>
+    <string name="edit_profile_data">edit profile data</string>
 
 </resources>
